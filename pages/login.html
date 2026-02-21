@@ -2,855 +2,631 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - MAINTAIN HEALTH</title>
-    <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Style tambahan khusus halaman login */
-        .login-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
         }
-        
-        .login-box {
+
+        /* LOGIN SCREEN */
+        #login-screen {
             background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
+            border-radius: 24px;
+            padding: 24px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        
-        .logo {
+
+        .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
-        
-        .logo h1 {
-            color: #667eea;
-            font-size: 28px;
-            margin-bottom: 5px;
+
+        .login-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
-        
-        .logo p {
+
+        .login-header p {
             color: #666;
-            font-size: 14px;
+            font-size: 0.95rem;
         }
-        
-        .tab-buttons {
+
+        .login-header .back-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* LOGIN METHODS */
+        .login-methods {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
         }
-        
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: none;
-            font-size: 16px;
+
+        .login-method-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #999;
+            color: #333;
             cursor: pointer;
             transition: all 0.3s;
-            border-radius: 10px;
         }
-        
-        .tab-btn.active {
-            color: #667eea;
-            background: #f0f3ff;
+
+        .login-method-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-2px);
         }
-        
+
+        .login-method-btn i {
+            font-size: 1.4rem;
+        }
+
+        /* LOGIN FORM */
         .login-form {
-            display: none;
+            margin-top: 20px;
         }
-        
-        .login-form.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 500;
-            font-size: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
-        
-        .input-group {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            color: #999;
-            font-size: 18px;
-        }
-        
-        .input-field {
+
+        .form-group input {
             width: 100%;
-            padding: 15px 15px 15px 50px;
+            padding: 14px 16px;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 1rem;
             transition: all 0.3s;
-            box-sizing: border-box;
         }
-        
-        .input-field:focus {
+
+        .form-group input:focus {
             border-color: #667eea;
             outline: none;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        
-        .input-field.error {
-            border-color: #f44336;
+
+        .password-input {
+            position: relative;
         }
-        
-        .password-toggle {
+
+        .toggle-password {
             position: absolute;
-            right: 15px;
-            color: #999;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
-            font-size: 18px;
-        }
-        
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .remember {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             color: #666;
-            font-size: 14px;
         }
-        
-        .remember input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .forgot-link {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-        
-        .btn-login {
+
+        /* BUTTONS */
+        .btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 16px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 20px;
+            transition: all 0.3s;
+            margin-bottom: 12px;
         }
-        
-        .btn-login:hover {
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
-        
-        .btn-login:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
         }
-        
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-google {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-google:hover {
+            border-color: #667eea;
+        }
+
+        .btn-google img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* LINKS */
+        .forgot-password {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         .register-link {
             text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 2px solid #f0f0f0;
             color: #666;
-            font-size: 14px;
         }
-        
+
         .register-link a {
             color: #667eea;
             text-decoration: none;
             font-weight: 600;
         }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        
-        /* OTP Section */
-        .otp-section {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            animation: slideDown 0.5s;
-        }
-        
-        .otp-input {
-            text-align: center;
-            letter-spacing: 8px;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 15px;
-        }
-        
-        .timer {
-            text-align: center;
-            color: #f44336;
-            font-size: 14px;
-            margin: 10px 0;
-        }
-        
-        .resend-btn {
-            background: none;
-            border: none;
-            color: #667eea;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 14px;
-            width: 100%;
+
+        /* OTP SCREEN */
+        .otp-screen {
             text-align: center;
         }
-        
-        .resend-btn:disabled {
-            color: #999;
-            cursor: not-allowed;
+
+        .otp-header {
+            margin-bottom: 32px;
         }
-        
-        .error-message {
-            color: #f44336;
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
+
+        .otp-header h3 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
         }
-        
-        .error-message.show {
-            display: block;
-        }
-        
-        .success-message {
-            color: #4CAF50;
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
-        }
-        
-        .success-message.show {
-            display: block;
-        }
-        
-        .back-to-login {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .back-btn {
-            background: none;
-            border: none;
+
+        .otp-header p {
             color: #666;
-            cursor: pointer;
-            font-size: 14px;
         }
-        
-        .back-btn:hover {
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 32px 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .otp-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .resend-link {
             color: #667eea;
-        }
-        
-        /* Animations */
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s;
-        }
-        
-        /* Loading Spinner */
-        .spinner {
+            cursor: pointer;
+            font-weight: 600;
+            margin: 16px 0;
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .resend-link:hover {
+            text-decoration: underline;
         }
-        
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-box {
-                padding: 30px 20px;
+
+        .timer {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 8px 0;
+        }
+
+        /* NOTIFICATION */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 350px;
+        }
+
+        .notification-success {
+            border-left: 4px solid #48bb78;
+        }
+
+        .notification-error {
+            border-left: 4px solid #f56565;
+        }
+
+        .notification-info {
+            border-left: 4px solid #4299e1;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+        }
+
+        .notification-message {
+            color: #333;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .notification-close {
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
-            
-            .logo h1 {
-                font-size: 24px;
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
-            
-            .tab-btn {
-                font-size: 14px;
-                padding: 10px;
-            }
-            
-            .input-field {
-                padding: 12px 12px 12px 45px;
-                font-size: 14px;
-            }
-            
-            .btn-login {
-                padding: 14px;
-                font-size: 16px;
-            }
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <!-- Logo -->
-            <div class="logo">
-                <h1>MAINTAIN HEALTH</h1>
-                <p>by Salsabillah Kirana Rahmadani</p>
+    <div id="login-screen">
+        <div class="login-header">
+            <span class="back-icon">🔐</span>
+            <h2>MAINTAIN HEALTH</h2>
+            <p>Silakan masuk ke akun Anda</p>
+        </div>
+
+        <!-- LOGIN METHODS -->
+        <div id="login-methods" class="login-methods">
+            <button class="login-method-btn" onclick="showEmailLogin()">
+                <span>📧</span> Masuk dengan Email
+            </button>
+            <button class="login-method-btn" onclick="showPhoneLogin()">
+                <span>📱</span> Masuk dengan Nomor Telepon
+            </button>
+            <button class="login-method-btn btn-google" onclick="showNotification('Google Login akan segera tersedia', 'info')">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z' fill='%234285F4'/%3E%3C/svg%3E" alt="Google">
+                Masuk dengan Google
+            </button>
+        </div>
+
+        <!-- LOGIN FORM (EMAIL) - HIDDEN AWAL -->
+        <div id="email-login" class="login-form hidden">
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" id="email" placeholder="contoh@email.com">
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <div class="password-input">
+                    <input type="password" id="password" placeholder="••••••••">
+                    <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="processLogin()">Masuk</button>
+            <button class="btn btn-secondary" onclick="showLoginMethods()">Kembali</button>
+        </div>
+
+        <!-- LOGIN FORM (PHONE) - HIDDEN AWAL -->
+        <div id="phone-login" class="login-form hidden">
+            <div class="form-group">
+                <label>📱 Nomor Telepon</label>
+                <input type="tel" id="phone" placeholder="081234567890">
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <div class="password-input">
+                    <input type="password" id="phone-password" placeholder="••••••••">
+                    <span class="toggle-password" onclick="togglePassword('phone-password')">👁️</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="processLogin()">Masuk</button>
+            <button class="btn btn-secondary" onclick="showLoginMethods()">Kembali</button>
+        </div>
+
+        <!-- FORGOT PASSWORD - HIDDEN AWAL -->
+        <div id="forgot-password" class="login-form hidden">
+            <div class="form-group">
+                <label>📧 Email / 📱 Nomor Telepon</label>
+                <input type="text" id="forgot-input" placeholder="Masukkan email atau nomor telepon">
+            </div>
+            <button class="btn btn-primary" onclick="sendOTP()">Kirim Kode OTP</button>
+            <button class="btn btn-secondary" onclick="showLoginMethods()">Kembali</button>
+        </div>
+
+        <!-- OTP SCREEN - HIDDEN AWAL -->
+        <div id="otp-screen" class="otp-screen hidden">
+            <div class="otp-header">
+                <h3>🔑 Masukkan Kode OTP</h3>
+                <p>Kode 6 digit telah dikirim ke email/telepon Anda</p>
             </div>
             
-            <!-- Tab Buttons -->
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchTab('email')" id="tab-email">📧 Email</button>
-                <button class="tab-btn" onclick="switchTab('phone')" id="tab-phone">📱 No. HP</button>
-                <button class="tab-btn" onclick="switchTab('forgot')" id="tab-forgot">🔐 Lupa</button>
+            <div class="otp-inputs">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 0)" onkeypress="return onlyNumber(event)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 1)" onkeypress="return onlyNumber(event)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 2)" onkeypress="return onlyNumber(event)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 3)" onkeypress="return onlyNumber(event)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 4)" onkeypress="return onlyNumber(event)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 5)" onkeypress="return onlyNumber(event)">
+            </div>
+
+            <div class="timer" id="timer">00:60</div>
+            
+            <button class="btn btn-primary" onclick="verifyOTP()">Verifikasi</button>
+            
+            <div>
+                <span class="resend-link" onclick="resendOTP()">Kirim ulang kode</span>
             </div>
             
-            <!-- FORM LOGIN EMAIL -->
-            <div id="email-form" class="login-form active">
-                <div class="form-group">
-                    <label>Alamat Email</label>
-                    <div class="input-group">
-                        <span class="input-icon">📧</span>
-                        <input type="email" id="email" class="input-field" placeholder="contoh@email.com">
-                    </div>
-                    <div id="email-error" class="error-message">Email tidak valid</div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="input-group">
-                        <span class="input-icon">🔒</span>
-                        <input type="password" id="password" class="input-field" placeholder="Minimal 6 karakter">
-                        <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
-                    </div>
-                    <div id="password-error" class="error-message">Password harus minimal 6 karakter</div>
-                </div>
-                
-                <div class="remember-forgot">
-                    <label class="remember">
-                        <input type="checkbox" id="remember-email"> Ingat saya
-                    </label>
-                    <a href="#" class="forgot-link" onclick="switchTab('forgot')">Lupa password?</a>
-                </div>
-                
-                <button class="btn-login" onclick="loginWithEmail()" id="btn-email-login">Masuk dengan Email</button>
-            </div>
-            
-            <!-- FORM LOGIN NO HP -->
-            <div id="phone-form" class="login-form">
-                <div class="form-group">
-                    <label>Nomor Telepon</label>
-                    <div class="input-group">
-                        <span class="input-icon">📱</span>
-                        <input type="tel" id="phone" class="input-field" placeholder="081234567890">
-                    </div>
-                    <div id="phone-error" class="error-message">Nomor telepon tidak valid</div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="input-group">
-                        <span class="input-icon">🔒</span>
-                        <input type="password" id="phone-password" class="input-field" placeholder="Minimal 6 karakter">
-                        <span class="password-toggle" onclick="togglePassword('phone-password')">👁️</span>
-                    </div>
-                    <div id="phone-password-error" class="error-message">Password harus minimal 6 karakter</div>
-                </div>
-                
-                <div class="remember-forgot">
-                    <label class="remember">
-                        <input type="checkbox" id="remember-phone"> Ingat saya
-                    </label>
-                    <a href="#" class="forgot-link" onclick="switchTab('forgot')">Lupa password?</a>
-                </div>
-                
-                <button class="btn-login" onclick="loginWithPhone()" id="btn-phone-login">Masuk dengan No. HP</button>
-            </div>
-            
-            <!-- FORM LUPA PASSWORD -->
-            <div id="forgot-form" class="login-form">
-                <div class="form-group">
-                    <label>Email atau Nomor Telepon</label>
-                    <div class="input-group">
-                        <span class="input-icon">📧/📱</span>
-                        <input type="text" id="forgot-input" class="input-field" placeholder="Email atau No. HP">
-                    </div>
-                    <div id="forgot-error" class="error-message">Field ini harus diisi</div>
-                </div>
-                
-                <button class="btn-login" onclick="sendOTP()" id="btn-send-otp">Kirim Kode OTP</button>
-                
-                <!-- OTP Section (hidden by default) -->
-                <div id="otp-section" class="otp-section" style="display: none;">
-                    <div class="form-group">
-                        <label>Masukkan Kode OTP</label>
-                        <input type="text" id="otp-input" class="input-field otp-input" placeholder="••••••" maxlength="6">
-                        <div id="otp-error" class="error-message">Kode OTP salah</div>
-                    </div>
-                    
-                    <div class="timer" id="timer">02:00</div>
-                    
-                    <button class="btn-login" onclick="verifyOTP()" id="btn-verify-otp">Verifikasi OTP</button>
-                    
-                    <button class="resend-btn" onclick="resendOTP()" id="btn-resend" disabled>Kirim Ulang OTP</button>
-                    
-                    <div class="back-to-login">
-                        <button class="back-btn" onclick="switchTab('email')">← Kembali ke Login</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Register Link -->
-            <div class="register-link">
-                Belum punya akun? <a href="#" onclick="showRegister()">Daftar sekarang</a>
-            </div>
-            
-            <!-- Loading Overlay -->
-            <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
-                <div class="spinner"></div>
-                <span>Memproses...</span>
-            </div>
+            <button class="btn btn-secondary" onclick="backToForgot()">Kembali</button>
+        </div>
+
+        <!-- FORGOT PASSWORD LINK -->
+        <div class="forgot-password">
+            <a href="#" onclick="showForgotPassword()">Lupa password?</a>
+        </div>
+
+        <!-- REGISTER LINK -->
+        <div class="register-link">
+            Belum punya akun? <a href="#" onclick="showNotification('Fitur registrasi akan segera dibuka', 'info')">Daftar</a>
         </div>
     </div>
-    
-    <!-- Notification -->
-    <div id="notification" class="notification" style="display: none;"></div>
-    
+
     <script>
-        // State
-        let otpTimer;
-        let timeLeft = 120; // 2 minutes in seconds
-        let currentOTP = '';
-        
-        // Switch between tabs
-        function switchTab(tab) {
-            // Update tab buttons
-            document.getElementById('tab-email').classList.remove('active');
-            document.getElementById('tab-phone').classList.remove('active');
-            document.getElementById('tab-forgot').classList.remove('active');
-            
-            // Hide all forms
-            document.getElementById('email-form').classList.remove('active');
-            document.getElementById('phone-form').classList.remove('active');
-            document.getElementById('forgot-form').classList.remove('active');
-            
-            // Show selected form
-            if (tab === 'email') {
-                document.getElementById('tab-email').classList.add('active');
-                document.getElementById('email-form').classList.add('active');
-            } else if (tab === 'phone') {
-                document.getElementById('tab-phone').classList.add('active');
-                document.getElementById('phone-form').classList.add('active');
-            } else if (tab === 'forgot') {
-                document.getElementById('tab-forgot').classList.add('active');
-                document.getElementById('forgot-form').classList.add('active');
-                // Hide OTP section when switching to forgot
-                document.getElementById('otp-section').style.display = 'none';
-            }
-        }
-        
-        // Toggle password visibility
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (field.type === 'password') {
-                field.type = 'text';
-            } else {
-                field.type = 'password';
-            }
-        }
-        
-        // Validate email
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        // Validate phone number (Indonesia format)
-        function validatePhone(phone) {
-            const re = /^(08|62|628)[0-9]{8,12}$/;
-            return re.test(phone);
-        }
-        
-        // Show error
-        function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.textContent = message;
-            errorElement.classList.add('show');
-            
-            // Add shake animation to input
-            const input = errorElement.previousElementSibling.querySelector('.input-field');
-            if (input) {
-                input.classList.add('shake');
-                setTimeout(() => {
-                    input.classList.remove('shake');
-                }, 500);
-            }
-        }
-        
-        // Hide error
-        function hideError(elementId) {
-            document.getElementById(elementId).classList.remove('show');
-        }
-        
-        // Show notification
+        // ========== NOTIFICATION SYSTEM ==========
         function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.style.display = 'block';
+            const notif = document.createElement('div');
+            notif.className = `custom-notification notification-${type}`;
+            notif.innerHTML = `
+                <span class="notification-icon">${getIcon(type)}</span>
+                <span class="notification-message">${message}</span>
+                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
+            `;
+            document.body.appendChild(notif);
             
             setTimeout(() => {
-                notification.style.display = 'none';
+                if (notif.parentElement) {
+                    notif.remove();
+                }
             }, 3000);
         }
-        
-        // Show loading
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-        }
-        
-        // Login with email
-        function loginWithEmail() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Reset errors
-            hideError('email-error');
-            hideError('password-error');
-            
-            let isValid = true;
-            
-            // Validate email
-            if (!email) {
-                showError('email-error', 'Email harus diisi');
-                isValid = false;
-            } else if (!validateEmail(email)) {
-                showError('email-error', 'Format email tidak valid');
-                isValid = false;
-            }
-            
-            // Validate password
-            if (!password) {
-                showError('password-error', 'Password harus diisi');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('password-error', 'Password minimal 6 karakter');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                showLoading(true);
-                
-                // Simulate login process
-                setTimeout(() => {
-                    showLoading(false);
-                    
-                    // Save login status
-                    const userData = {
-                        email: email,
-                        isLoggedIn: true,
-                        loginMethod: 'email',
-                        lastLogin: new Date().toISOString()
-                    };
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                    
-                    showNotification('Login berhasil! Selamat datang di MAINTAIN HEALTH', 'success');
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }, 2000);
+
+        function getIcon(type) {
+            switch(type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'info': return 'ℹ️';
+                default: return '✅';
             }
         }
-        
-        // Login with phone
-        function loginWithPhone() {
-            const phone = document.getElementById('phone').value;
-            const password = document.getElementById('phone-password').value;
-            
-            // Reset errors
-            hideError('phone-error');
-            hideError('phone-password-error');
-            
-            let isValid = true;
-            
-            // Validate phone
-            if (!phone) {
-                showError('phone-error', 'Nomor telepon harus diisi');
-                isValid = false;
-            } else if (!validatePhone(phone)) {
-                showError('phone-error', 'Format nomor telepon tidak valid');
-                isValid = false;
+
+        // ========== NAVIGATION ==========
+        function showLoginMethods() {
+            document.getElementById('login-methods').classList.remove('hidden');
+            document.getElementById('email-login').classList.add('hidden');
+            document.getElementById('phone-login').classList.add('hidden');
+            document.getElementById('forgot-password').classList.add('hidden');
+            document.getElementById('otp-screen').classList.add('hidden');
+        }
+
+        function showEmailLogin() {
+            document.getElementById('login-methods').classList.add('hidden');
+            document.getElementById('email-login').classList.remove('hidden');
+        }
+
+        function showPhoneLogin() {
+            document.getElementById('login-methods').classList.add('hidden');
+            document.getElementById('phone-login').classList.remove('hidden');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('login-methods').classList.add('hidden');
+            document.getElementById('forgot-password').classList.remove('hidden');
+        }
+
+        function backToForgot() {
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('forgot-password').classList.remove('hidden');
+        }
+
+        // ========== PASSWORD TOGGLE ==========
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const type = input.type === 'password' ? 'text' : 'password';
+            input.type = type;
+        }
+
+        // ========== OTP FUNCTIONS ==========
+        function onlyNumber(event) {
+            const charCode = event.which ? event.which : event.keyCode;
+            if (charCode < 48 || charCode > 57) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+
+        function moveToNext(input, index) {
+            if (input.value.length === 1 && index < 5) {
+                document.querySelectorAll('.otp-input')[index + 1].focus();
             }
             
-            // Validate password
-            if (!password) {
-                showError('phone-password-error', 'Password harus diisi');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('phone-password-error', 'Password minimal 6 karakter');
-                isValid = false;
-            }
+            // Auto verify jika semua terisi
+            const inputs = document.querySelectorAll('.otp-input');
+            let isComplete = true;
+            inputs.forEach(i => {
+                if (!i.value) isComplete = false;
+            });
             
-            if (isValid) {
-                showLoading(true);
-                
-                // Simulate login process
-                setTimeout(() => {
-                    showLoading(false);
-                    
-                    // Save login status
-                    const userData = {
-                        phone: phone,
-                        isLoggedIn: true,
-                        loginMethod: 'phone',
-                        lastLogin: new Date().toISOString()
-                    };
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                    
-                    showNotification('Login berhasil! Selamat datang di MAINTAIN HEALTH', 'success');
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }, 2000);
+            if (isComplete) {
+                setTimeout(() => verifyOTP(), 500);
             }
         }
-        
-        // Send OTP
-        function sendOTP() {
-            const input = document.getElementById('forgot-input').value;
-            
-            hideError('forgot-error');
-            
-            if (!input) {
-                showError('forgot-error', 'Email atau nomor telepon harus diisi');
-                return;
-            }
-            
-            showLoading(true);
-            
-            // Simulate sending OTP
-            setTimeout(() => {
-                showLoading(false);
-                
-                // Generate random OTP (6 digits)
-                currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                // Show OTP section
-                document.getElementById('otp-section').style.display = 'block';
-                document.getElementById('btn-send-otp').style.display = 'none';
-                
-                // Start timer
-                startOTPTimer();
-                
-                showNotification(`Kode OTP telah dikirim ke ${input}`, 'success');
-                
-                // For demo purposes, show OTP in console
-                console.log('OTP Anda:', currentOTP);
-                
-                // Auto-fill OTP for demo (remove in production)
-                document.getElementById('otp-input').value = currentOTP;
-            }, 2000);
-        }
-        
-        // Start OTP timer
-        function startOTPTimer() {
-            timeLeft = 120;
-            updateTimer();
+
+        // Timer OTP
+        let otpTimer;
+        function startTimer(seconds) {
+            const timerDisplay = document.getElementById('timer');
+            let remaining = seconds;
             
             otpTimer = setInterval(() => {
-                timeLeft--;
-                updateTimer();
+                const minutes = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                 
-                if (timeLeft <= 0) {
+                if (remaining <= 0) {
                     clearInterval(otpTimer);
-                    document.getElementById('btn-resend').disabled = false;
-                    document.getElementById('timer').textContent = '00:00';
+                    timerDisplay.textContent = 'Kode expired';
                 }
+                remaining--;
             }, 1000);
         }
-        
-        // Update timer display
-        function updateTimer() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        function sendOTP() {
+            const input = document.getElementById('forgot-input').value;
+            if (!input) {
+                showNotification('Masukkan email atau nomor telepon', 'error');
+                return;
+            }
+            
+            // Validasi email/phone sederhana
+            if (!input.includes('@') && !/^\d+$/.test(input)) {
+                showNotification('Format email atau nomor telepon tidak valid', 'error');
+                return;
+            }
+            
+            showNotification(`Kode OTP telah dikirim ke ${input}`);
+            
+            document.getElementById('forgot-password').classList.add('hidden');
+            document.getElementById('otp-screen').classList.remove('hidden');
+            
+            startTimer(60);
         }
-        
-        // Verify OTP
+
+        function resendOTP() {
+            clearInterval(otpTimer);
+            showNotification('Kode OTP telah dikirim ulang');
+            startTimer(60);
+        }
+
         function verifyOTP() {
-            const enteredOTP = document.getElementById('otp-input').value;
+            const inputs = document.querySelectorAll('.otp-input');
+            let otp = '';
+            inputs.forEach(i => otp += i.value);
             
-            hideError('otp-error');
-            
-            if (!enteredOTP) {
-                showError('otp-error', 'Kode OTP harus diisi');
-                return;
-            }
-            
-            if (enteredOTP.length !== 6) {
-                showError('otp-error', 'Kode OTP harus 6 digit');
-                return;
-            }
-            
-            if (enteredOTP !== currentOTP) {
-                showError('otp-error', 'Kode OTP salah');
-                return;
-            }
-            
-            showLoading(true);
-            
-            // Simulate verification
-            setTimeout(() => {
-                showLoading(false);
-                
+            if (otp.length === 6) {
+                showNotification('✅ Verifikasi berhasil!');
                 clearInterval(otpTimer);
-                showNotification('Verifikasi berhasil! Silakan reset password Anda', 'success');
                 
-                // Here you would show reset password form
-                // For now, redirect to login
                 setTimeout(() => {
-                    switchTab('email');
-                    document.getElementById('otp-section').style.display = 'none';
-                    document.getElementById('btn-send-otp').style.display = 'block';
-                }, 2000);
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } else {
+                showNotification('Kode OTP tidak valid', 'error');
+            }
+        }
+
+        // ========== LOGIN PROCESS ==========
+        function processLogin() {
+            // Cek apakah dari email atau phone
+            const email = document.getElementById('email')?.value;
+            const phone = document.getElementById('phone')?.value;
+            const password = document.getElementById('password')?.value || document.getElementById('phone-password')?.value;
+            
+            if (!email && !phone) {
+                showNotification('Masukkan email atau nomor telepon', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showNotification('Masukkan password', 'error');
+                return;
+            }
+            
+            showNotification('✅ Login berhasil!');
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
             }, 1500);
         }
-        
-        // Resend OTP
-        function resendOTP() {
-            document.getElementById('btn-resend').disabled = true;
-            
-            // Generate new OTP
-            currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // Reset timer
-            clearInterval(otpTimer);
-            startOTPTimer();
-            
-            showNotification('Kode OTP telah dikirim ulang', 'success');
-            console.log('OTP baru:', currentOTP);
-            
-            // Auto-fill for demo
-            document.getElementById('otp-input').value = currentOTP;
-        }
-        
-        // Show register (for demo)
-        function showRegister() {
-            showNotification('Fitur pendaftaran akan segera hadir!', 'info');
-        }
-        
-        // Check if already logged in
-        window.onload = function() {
-            const userData = localStorage.getItem('userData');
-            if (userData) {
-                const user = JSON.parse(userData);
-                if (user.isLoggedIn) {
-                    // Auto redirect to dashboard
-                    window.location.href = 'dashboard.html';
-                }
-            }
-        };
-        
-        // Add enter key support
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const activeTab = document.querySelector('.tab-btn.active').id;
-                if (activeTab === 'tab-email') {
-                    loginWithEmail();
-                } else if (activeTab === 'tab-phone') {
-                    loginWithPhone();
-                } else if (activeTab === 'tab-forgot') {
-                    const otpVisible = document.getElementById('otp-section').style.display === 'block';
-                    if (otpVisible) {
-                        verifyOTP();
-                    } else {
-                        sendOTP();
-                    }
-                }
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek apakah sudah login sebelumnya
+            const lastLogin = localStorage.getItem('lastLogin');
+            if (lastLogin) {
+                document.querySelector('.login-header p').textContent = 'Selamat datang kembali!';
             }
         });
     </script>

@@ -2,78 +2,279 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akun Saya - MAINTAIN HEALTH</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Akun - MAINTAIN HEALTH</title>
     <style>
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        
-        .profile-photo {
+
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .card-header h2 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .card-header span {
+            font-size: 1.8rem;
+        }
+
+        /* PROFILE AVATAR */
+        .profile-avatar {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .avatar-image {
             width: 120px;
             height: 120px;
-            border-radius: 60px;
-            background: #f0f0f0;
-            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
             font-size: 48px;
-            color: #667eea;
-            cursor: pointer;
-            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        
-        .profile-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        .avatar-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
         }
-        
-        .account-menu {
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+            outline: none;
             background: white;
-            border-radius: 10px;
-            overflow: hidden;
         }
-        
-        .menu-item {
+
+        .input-group input:not([readonly]) {
+            background: white;
+            border-color: #667eea;
+        }
+
+        .input-group button {
+            padding: 0 20px;
+            border: none;
+            border-radius: 12px;
+            background: #f0f0f0;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .input-group button:hover {
+            background: #e0e0e0;
+        }
+
+        /* BUTTONS */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        /* LANGUAGE SELECT */
+        .language-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .language-select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        /* INFO ROW */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        /* NOTIFICATION */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 350px;
         }
-        
-        .menu-item:hover {
-            background: #f5f5f5;
+
+        .notification-success {
+            border-left: 4px solid #48bb78;
         }
-        
-        .menu-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            width: 30px;
+
+        .notification-error {
+            border-left: 4px solid #f56565;
         }
-        
-        .menu-content {
-            flex: 1;
+
+        .notification-info {
+            border-left: 4px solid #4299e1;
         }
-        
-        .menu-title {
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
-        
-        .menu-subtitle {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .arrow {
-            color: #999;
-        }
-        
+
+        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -86,346 +287,429 @@
             align-items: center;
             z-index: 1000;
         }
-        
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
+
         .modal.active {
             display: flex;
         }
-        
-        .language-option {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
         }
-        
-        .language-option:hover {
-            background: #f5f5f5;
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
         }
-        
-        .language-option.selected {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-        
-        .danger-zone {
-            margin-top: 30px;
-            padding: 20px;
-            background: #ffebee;
-            border-radius: 10px;
-        }
-        
-        .btn-danger {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-        
-        .btn-danger:hover {
-            background: #d32f2f;
-        }
-        
-        .info-text {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
+
+        .modal-header h3 {
+            color: #333;
+            font-size: 1.5rem;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="welcome-header">
-            <button class="back-button" onclick="window.location.href='dashboard.html'">Kembali</button>
-            <h1>Akun Saya</h1>
+    <div class="dashboard-header">
+        <button class="back-button" onclick="goBack()">←</button>
+        <h1>AKUN SAYA</h1>
+        <p>Kelola profil dan pengaturan akun</p>
+    </div>
+
+    <div class="content">
+        <!-- PROFILE CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span>👤</span>
+                <h2>PROFILE</h2>
+            </div>
+
+            <!-- Avatar -->
+            <div class="profile-avatar">
+                <div class="avatar-image" id="avatarImage">
+                    👤
+                </div>
+                <div class="avatar-buttons">
+                    <button class="btn btn-primary" style="width: auto; padding: 10px 20px;" onclick="editFoto()">
+                        📷 Ganti Foto
+                    </button>
+                    <button class="btn btn-secondary" style="width: auto; padding: 10px 20px; background: #f0f0f0;" onclick="hapusFoto()">
+                        🗑️ Hapus
+                    </button>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label>📧 Email</label>
+                <div class="input-group">
+                    <input type="email" id="email" value="salsabillah@example.com" readonly>
+                    <button onclick="editField('email')" id="btn-email">Ubah</button>
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="form-group">
+                <label>👤 Username</label>
+                <div class="input-group">
+                    <input type="text" id="username" value="salsabillah_kirana" readonly>
+                    <button onclick="editField('username')" id="btn-username">Ubah</button>
+                </div>
+                <small id="username-status" style="color: #48bb78; display: none;">✓ Username tersedia</small>
+            </div>
+
+            <!-- Nomor HP -->
+            <div class="form-group">
+                <label>📱 Nomor HP</label>
+                <div class="input-group">
+                    <input type="tel" id="phone" value="081234567890" readonly>
+                    <button onclick="editField('phone')" id="btn-phone">Ubah</button>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <button class="btn btn-primary" onclick="editPassword()" style="margin-top: 8px;">
+                    🔑 Ubah Password
+                </button>
+            </div>
+
+            <!-- Bahasa -->
+            <div class="form-group">
+                <label>🌐 Bahasa</label>
+                <select class="language-select" id="language" onchange="changeLanguage()">
+                    <option value="id">Indonesia</option>
+                    <option value="en">English</option>
+                    <option value="ja">日本語 (Japanese)</option>
+                    <option value="ko">한국어 (Korean)</option>
+                    <option value="zh">中文 (Chinese)</option>
+                    <option value="ar">العربية (Arabic)</option>
+                </select>
+            </div>
         </div>
-        
-        <!-- Profile Photo Section -->
-        <div class="profile-header">
-            <div class="profile-photo" onclick="showPhotoOptions()" id="profile-photo">
-                <span id="photo-placeholder">👤</span>
+
+        <!-- PENGATURAN CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span>⚙️</span>
+                <h2>PENGATURAN</h2>
             </div>
-            <h2 id="display-name">Pengguna</h2>
-            <p id="display-email">email@example.com</p>
+
+            <div class="info-row">
+                <span class="info-label">📅 Tanggal Daftar</span>
+                <span class="info-value" id="registerDate">1 Januari 2024</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">🕐 Terakhir Login</span>
+                <span class="info-value" id="lastLogin">-</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">📊 Versi Aplikasi</span>
+                <span class="info-value">1.0.0</span>
+            </div>
+
+            <button class="btn btn-danger" onclick="logout()" style="margin-top: 20px;">
+                🚪 Log Out
+            </button>
         </div>
-        
-        <!-- Account Menu -->
-        <div class="account-menu">
-            <div class="menu-item" onclick="showEditProfile('email')">
-                <span class="menu-icon">📧</span>
-                <div class="menu-content">
-                    <div class="menu-title">Email</div>
-                    <div class="menu-subtitle" id="email-display">email@example.com</div>
-                </div>
-                <span class="arrow">›</span>
+
+        <!-- INFO CARD -->
+        <div class="card">
+            <div class="card-header">
+                <span>ℹ️</span>
+                <h2>TENTANG APLIKASI</h2>
             </div>
-            
-            <div class="menu-item" onclick="showEditProfile('username')">
-                <span class="menu-icon">👤</span>
-                <div class="menu-content">
-                    <div class="menu-title">Username</div>
-                    <div class="menu-subtitle" id="username-display">@username</div>
-                </div>
-                <span class="arrow">›</span>
+
+            <div style="text-align: center; margin-bottom: 16px;">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='80' height='80'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23667eea' opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='30' fill='%23667eea' opacity='0.4'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%23667eea'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='30' font-weight='bold' dy='.3em'%3EMH%3C/text%3E%3C/svg%3E" alt="Logo">
             </div>
-            
-            <div class="menu-item" onclick="showEditProfile('phone')">
-                <span class="menu-icon">📱</span>
-                <div class="menu-content">
-                    <div class="menu-title">Nomor HP</div>
-                    <div class="menu-subtitle" id="phone-display">-</div>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-            
-            <div class="menu-item" onclick="showEditProfile('password')">
-                <span class="menu-icon">🔒</span>
-                <div class="menu-content">
-                    <div class="menu-title">Password</div>
-                    <div class="menu-subtitle">Ubah password</div>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-            
-            <div class="menu-item" onclick="showLanguageSettings()">
-                <span class="menu-icon">🌐</span>
-                <div class="menu-content">
-                    <div class="menu-title">Bahasa</div>
-                    <div class="menu-subtitle" id="language-display">Indonesia</div>
-                </div>
-                <span class="arrow">›</span>
-            </div>
-            
-            <div class="menu-item">
-                <span class="menu-icon">📅</span>
-                <div class="menu-content">
-                    <div class="menu-title">Tanggal Daftar</div>
-                    <div class="menu-subtitle" id="register-date">-</div>
-                </div>
-            </div>
-            
-            <div class="menu-item">
-                <span class="menu-icon">🕐</span>
-                <div class="menu-content">
-                    <div class="menu-title">Terakhir Login</div>
-                    <div class="menu-subtitle" id="last-login">-</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Danger Zone -->
-        <div class="danger-zone">
-            <button class="btn-danger" onclick="logout()">Log Out</button>
+
+            <p style="text-align: center; color: #333; font-weight: bold; margin-bottom: 8px;">
+                MAINTAIN HEALTH
+            </p>
+            <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 4px;">
+                by Salsabillah Kirana Rahmadani
+            </p>
+            <p style="text-align: center; color: #999; font-size: 0.8rem;">
+                Versi 1.0.0 (2024)
+            </p>
         </div>
     </div>
-    
-    <!-- Modal for Photo Options -->
-    <div class="modal" id="photo-modal">
+
+    <!-- MODAL OTP -->
+    <div class="modal" id="otpModal">
         <div class="modal-content">
-            <h3>Foto Profil</h3>
-            <div class="menu-item" onclick="updateProfilePhoto('camera')">
-                <span class="menu-icon">📷</span>
-                <div class="menu-content">Ambil Foto</div>
+            <div class="modal-header">
+                <h3>🔐 Verifikasi OTP</h3>
+                <p style="color: #666; margin-top: 8px;">Kode telah dikirim ke nomor Anda</p>
             </div>
-            <div class="menu-item" onclick="updateProfilePhoto('gallery')">
-                <span class="menu-icon">🖼️</span>
-                <div class="menu-content">Pilih dari Galeri</div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; margin: 24px 0;">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 0)">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 1)">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 2)">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 3)">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 4)">
+                <input type="text" class="otp-input" maxlength="1" style="width: 50px; height: 60px; text-align: center; font-size: 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;" onkeyup="moveOtp(this, 5)">
             </div>
-            <div class="menu-item" onclick="deleteProfilePhoto()">
-                <span class="menu-icon">🗑️</span>
-                <div class="menu-content">Hapus Foto</div>
+
+            <div style="text-align: center; margin: 16px 0;">
+                <span class="resend-link" onclick="resendOtp()" style="color: #667eea; cursor: pointer;">Kirim ulang kode</span>
+                <div id="otpTimer" style="color: #999; margin-top: 8px;">01:00</div>
             </div>
-            <button class="btn-primary" onclick="closeModal('photo-modal')">Batal</button>
+
+            <button class="btn btn-primary" onclick="verifyOtp()">Verifikasi</button>
+            <button class="btn btn-secondary" onclick="closeModal()" style="background: #f0f0f0; margin-top: 8px;">Tutup</button>
         </div>
     </div>
-    
-    <!-- Modal for Email Edit -->
-    <div class="modal" id="email-modal">
-        <div class="modal-content">
-            <h3>Ubah Email</h3>
-            <input type="email" id="new-email" class="input-field" placeholder="Email baru">
-            <button class="btn-primary" onclick="updateEmail()">Simpan</button>
-            <button class="btn-link" onclick="closeModal('email-modal')">Batal</button>
-        </div>
-    </div>
-    
-    <!-- Modal for Username Edit -->
-    <div class="modal" id="username-modal">
-        <div class="modal-content">
-            <h3>Ubah Username</h3>
-            <input type="text" id="new-username" class="input-field" placeholder="Username baru">
-            <div class="info-text">Username harus unik dan minimal 3 karakter</div>
-            <button class="btn-primary" onclick="updateUsername()">Simpan</button>
-            <button class="btn-link" onclick="closeModal('username-modal')">Batal</button>
-        </div>
-    </div>
-    
-    <!-- Modal for Phone Edit -->
-    <div class="modal" id="phone-modal">
-        <div class="modal-content">
-            <h3>Ubah Nomor HP</h3>
-            <input type="tel" id="new-phone" class="input-field" placeholder="Nomor HP baru">
-            <div id="phone-otp-section" class="hidden">
-                <p>Kode OTP telah dikirim</p>
-                <input type="text" id="phone-otp" class="input-field" placeholder="Masukkan kode OTP">
-                <button class="btn-primary" onclick="verifyPhoneOTP()">Verifikasi</button>
-                <button class="btn-link" onclick="resendPhoneOTP()">Kirim Ulang</button>
-            </div>
-            <button class="btn-primary" onclick="sendPhoneOTP()">Kirim OTP</button>
-            <button class="btn-link" onclick="closeModal('phone-modal')">Batal</button>
-        </div>
-    </div>
-    
-    <!-- Modal for Password Edit -->
-    <div class="modal" id="password-modal">
-        <div class="modal-content">
-            <h3>Ubah Password</h3>
-            <input type="password" id="new-password" class="input-field" placeholder="Password baru">
-            <input type="password" id="confirm-password" class="input-field" placeholder="Konfirmasi password">
-            <button class="btn-primary" onclick="updatePassword()">Simpan</button>
-            <button class="btn-link" onclick="closeModal('password-modal')">Batal</button>
-        </div>
-    </div>
-    
-    <!-- Modal for Language -->
-    <div class="modal" id="language-modal">
-        <div class="modal-content">
-            <h3>Pilih Bahasa</h3>
-            <div class="language-option" onclick="changeLanguage('id')">
-                <span class="menu-icon">🇮🇩</span>
-                <div class="menu-content">Indonesia</div>
-            </div>
-            <div class="language-option" onclick="changeLanguage('en')">
-                <span class="menu-icon">🇬🇧</span>
-                <div class="menu-content">English</div>
-            </div>
-            <div class="language-option" onclick="changeLanguage('ar')">
-                <span class="menu-icon">🇸🇦</span>
-                <div class="menu-content">العربية</div>
-            </div>
-            <div class="language-option" onclick="changeLanguage('zh')">
-                <span class="menu-icon">🇨🇳</span>
-                <div class="menu-content">中文</div>
-            </div>
-            <button class="btn-primary" onclick="closeModal('language-modal')">Tutup</button>
-        </div>
-    </div>
-    
-    <script src="../js/script.js"></script>
+
     <script>
-        // Load user data
-        document.addEventListener('DOMContentLoaded', function() {
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        // ========== STATE ==========
+        let editingField = null;
+        let otpTimer;
+        let otpTimeLeft = 60;
+
+        // ========== NOTIFICATION ==========
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `custom-notification notification-${type}`;
+            notif.innerHTML = `
+                <span class="notification-icon">${getIcon(type)}</span>
+                <span class="notification-message">${message}</span>
+                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
+            `;
+            document.body.appendChild(notif);
             
-            // Display user info
-            document.getElementById('display-name').textContent = userData.profile?.namaLengkap || 'Pengguna';
-            document.getElementById('display-email').textContent = userData.email || 'email@example.com';
-            document.getElementById('email-display').textContent = userData.email || 'email@example.com';
-            document.getElementById('username-display').textContent = userData.username || '@username';
-            document.getElementById('phone-display').textContent = userData.phone || '-';
-            
-            // Set register date
-            const registerDate = userData.registerDate || new Date().toLocaleDateString('id-ID');
-            document.getElementById('register-date').textContent = registerDate;
-            
-            // Set last login
-            document.getElementById('last-login').textContent = new Date().toLocaleString('id-ID');
-            
-            // Set language
-            const languages = {
-                'id': 'Indonesia',
-                'en': 'English',
-                'ar': 'العربية',
-                'zh': '中文'
-            };
-            document.getElementById('language-display').textContent = languages[userData.language] || 'Indonesia';
-            
-            // Load profile photo
-            if (userData.profilePhoto) {
-                const photoDiv = document.getElementById('profile-photo');
-                photoDiv.innerHTML = `<img src="${userData.profilePhoto}" alt="Profile Photo">`;
-                document.getElementById('photo-placeholder').style.display = 'none';
-            }
-        });
-        
-        function showPhotoOptions() {
-            document.getElementById('photo-modal').classList.add('active');
+            setTimeout(() => notif.remove(), 3000);
         }
-        
-        function showEditProfile(type) {
-            closeAllModals();
-            document.getElementById(type + '-modal').classList.add('active');
-        }
-        
-        function showLanguageSettings() {
-            closeAllModals();
-            document.getElementById('language-modal').classList.add('active');
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-        
-        function closeAllModals() {
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.classList.remove('active');
-            });
-        }
-        
-        // Phone OTP functions
-        function sendPhoneOTP() {
-            const phone = document.getElementById('new-phone').value;
-            if (phone) {
-                showNotification('Kode OTP telah dikirim ke ' + phone, 'success');
-                document.getElementById('phone-otp-section').classList.remove('hidden');
-                sessionStorage.setItem('phone-otp', '123456');
-            } else {
-                showNotification('Masukkan nomor telepon!', 'error');
+
+        function getIcon(type) {
+            switch(type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'info': return 'ℹ️';
+                default: return '✅';
             }
         }
-        
-        function verifyPhoneOTP() {
-            const otp = document.getElementById('phone-otp').value;
-            const correctOTP = sessionStorage.getItem('phone-otp');
+
+        // ========== NAVIGATION ==========
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // ========== DATE ==========
+        function updateLastLogin() {
+            const now = new Date();
+            document.getElementById('lastLogin').textContent = now.toLocaleString('id-ID');
+        }
+        updateLastLogin();
+
+        // ========== EDIT FIELD ==========
+        function editField(field) {
+            const input = document.getElementById(field);
+            const btn = document.getElementById(`btn-${field}`);
             
-            if (otp === correctOTP) {
-                const userData = JSON.parse(localStorage.getItem('userData')) || {};
-                userData.phone = document.getElementById('new-phone').value;
-                localStorage.setItem('userData', JSON.stringify(userData));
+            if (input.readOnly) {
+                // Mode edit
+                input.readOnly = false;
+                input.focus();
+                btn.textContent = 'Simpan';
                 
-                document.getElementById('phone-display').textContent = userData.phone;
-                showNotification('Nomor telepon berhasil diperbarui!', 'success');
-                closeModal('phone-modal');
+                if (field === 'username') {
+                    // Simulasi cek ketersediaan username
+                    document.getElementById('username-status').style.display = 'block';
+                }
             } else {
-                showNotification('Kode OTP salah!', 'error');
+                // Mode simpan
+                const value = input.value.trim();
+                
+                if (!value) {
+                    showNotification(`${field} tidak boleh kosong`, 'error');
+                    return;
+                }
+                
+                if (field === 'email' && !value.includes('@')) {
+                    showNotification('Email tidak valid', 'error');
+                    return;
+                }
+                
+                if (field === 'phone' && value.length < 10) {
+                    showNotification('Nomor telepon tidak valid', 'error');
+                    return;
+                }
+                
+                // Simpan perubahan
+                input.readOnly = true;
+                btn.textContent = 'Ubah';
+                
+                if (field === 'username') {
+                    document.getElementById('username-status').style.display = 'none';
+                }
+                
+                if (field === 'phone') {
+                    // Tampilkan OTP modal
+                    showOtpModal();
+                } else {
+                    showNotification(`✅ ${field} berhasil diperbarui`);
+                }
+                
+                // Simpan ke localStorage
+                localStorage.setItem(field, value);
             }
         }
-        
-        function resendPhoneOTP() {
-            showNotification('Kode OTP telah dikirim ulang', 'success');
-            sessionStorage.setItem('phone-otp', Math.floor(100000 + Math.random() * 900000).toString());
+
+        // ========== PASSWORD ==========
+        function editPassword() {
+            const currentPass = prompt('Masukkan password saat ini:');
+            if (!currentPass) return;
+            
+            const newPass = prompt('Masukkan password baru (minimal 6 karakter):');
+            if (!newPass) return;
+            
+            if (newPass.length < 6) {
+                showNotification('Password minimal 6 karakter', 'error');
+                return;
+            }
+            
+            const confirmPass = prompt('Konfirmasi password baru:');
+            if (newPass !== confirmPass) {
+                showNotification('Password tidak cocok', 'error');
+                return;
+            }
+            
+            showNotification('✅ Password berhasil diperbarui');
         }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
+
+        // ========== FOTO ==========
+        function editFoto() {
+            const confirm = window.confirm('Pilih sumber foto:\nOK = Buka Kamera\nCancel = Buka Galeri');
+            
+            if (confirm) {
+                showNotification('📷 Membuka kamera...', 'info');
+                setTimeout(() => {
+                    document.getElementById('avatarImage').innerHTML = '📸';
+                    showNotification('✅ Foto berhasil diambil');
+                }, 2000);
+            } else {
+                showNotification('🖼️ Membuka galeri...', 'info');
+                setTimeout(() => {
+                    document.getElementById('avatarImage').innerHTML = '🖼️';
+                    showNotification('✅ Foto berhasil dipilih');
+                }, 2000);
             }
         }
+
+        function hapusFoto() {
+            if (confirm('Yakin ingin menghapus foto profil?')) {
+                document.getElementById('avatarImage').innerHTML = '👤';
+                showNotification('✅ Foto profil dihapus');
+            }
+        }
+
+        // ========== LANGUAGE ==========
+        function changeLanguage() {
+            const lang = document.getElementById('language').value;
+            const languages = {
+                id: 'Indonesia',
+                en: 'English',
+                ja: 'Japanese',
+                ko: 'Korean',
+                zh: 'Chinese',
+                ar: 'Arabic'
+            };
+            showNotification(`🌐 Bahasa diubah ke ${languages[lang]}`);
+            localStorage.setItem('language', lang);
+        }
+
+        // ========== OTP MODAL ==========
+        function showOtpModal() {
+            document.getElementById('otpModal').classList.add('active');
+            startOtpTimer();
+        }
+
+        function closeModal() {
+            document.getElementById('otpModal').classList.remove('active');
+            clearInterval(otpTimer);
+        }
+
+        function startOtpTimer() {
+            otpTimeLeft = 60;
+            updateOtpTimer();
+            
+            otpTimer = setInterval(() => {
+                otpTimeLeft--;
+                updateOtpTimer();
+                
+                if (otpTimeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    document.getElementById('otpTimer').textContent = 'Kode expired';
+                }
+            }, 1000);
+        }
+
+        function updateOtpTimer() {
+            const minutes = Math.floor(otpTimeLeft / 60);
+            const seconds = otpTimeLeft % 60;
+            document.getElementById('otpTimer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function moveOtp(input, index) {
+            if (input.value.length === 1 && index < 5) {
+                document.querySelectorAll('.otp-input')[index + 1].focus();
+            }
+        }
+
+        function resendOtp() {
+            clearInterval(otpTimer);
+            startOtpTimer();
+            showNotification('📱 Kode OTP telah dikirim ulang');
+        }
+
+        function verifyOtp() {
+            const inputs = document.querySelectorAll('.otp-input');
+            let otp = '';
+            inputs.forEach(i => otp += i.value);
+            
+            if (otp.length === 6) {
+                showNotification('✅ Nomor telepon berhasil diverifikasi');
+                closeModal();
+                
+                // Reset OTP inputs
+                inputs.forEach(i => i.value = '');
+            } else {
+                showNotification('❌ Kode OTP tidak valid', 'error');
+            }
+        }
+
+        // ========== LOGOUT ==========
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                showNotification('👋 Sampai jumpa kembali!');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved data
+            const savedEmail = localStorage.getItem('email');
+            const savedUsername = localStorage.getItem('username');
+            const savedPhone = localStorage.getItem('phone');
+            const savedLang = localStorage.getItem('language');
+            
+            if (savedEmail) document.getElementById('email').value = savedEmail;
+            if (savedUsername) document.getElementById('username').value = savedUsername;
+            if (savedPhone) document.getElementById('phone').value = savedPhone;
+            if (savedLang) document.getElementById('language').value = savedLang;
+        });
     </script>
 </body>
 </html>

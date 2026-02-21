@@ -2,259 +2,519 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - MAINTAIN HEALTH</title>
-    <link rel="stylesheet" href="../css/style.css">
     <style>
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        
-        .welcome-header {
+
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .dashboard-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 24px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .date-display {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* NAVIGATION */
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 16px;
+            margin: 20px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 30px;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .nav-item span {
+            font-size: 1.2rem;
+        }
+
+        .nav-item small {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* CONTENT */
+        .dashboard-content {
+            padding: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            border-radius: 24px;
             padding: 20px;
-            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .card-header h3 {
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* CHECKBOX & RADIO */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #e8e8e8;
+        }
+
+        .checkbox-item input[type="radio"],
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        /* STATS CARD */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
             margin-bottom: 20px;
         }
-        
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .menu-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform 0.3s;
+
+        .stat-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 16px;
+            border-radius: 16px;
             text-align: center;
         }
-        
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
         }
-        
-        .menu-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 4px;
         }
-        
-        .content-section {
+
+        /* RIWAYAT */
+        .riwayat-item {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .riwayat-date {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .riwayat-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .riwayat-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* NOTIFICATION */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 350px;
         }
-        
-        .back-button {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
+
+        .notification-success {
+            border-left: 4px solid #48bb78;
         }
-        
-        .back-button:hover {
-            background: #d32f2f;
+
+        .notification-error {
+            border-left: 4px solid #f56565;
+        }
+
+        .notification-info {
+            border-left: 4px solid #4299e1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="welcome-header">
-            <h1>Selamat Datang di MAINTAIN HEALTH</h1>
-            <p>Kelola kesehatan Anda dengan mudah</p>
+    <div class="dashboard-header">
+        <h1>MAINTAIN HEALTH</h1>
+        <p>by Salsabillah Kirana Rahmadani</p>
+        <div class="date-display" id="currentDate"></div>
+    </div>
+
+    <div class="dashboard-nav">
+        <div class="nav-item active" onclick="showSection('home')">
+            <span>🏠</span>
+            <small>Home</small>
         </div>
-        
-        <!-- Menu Cards -->
-        <div class="menu-grid" id="main-menu">
-            <div class="menu-card" onclick="showSection('data-diri')">
-                <div class="menu-icon">📋</div>
-                <h3>Data Diri</h3>
-                <p>Lengkapi informasi pribadi Anda</p>
-            </div>
-            
-            <div class="menu-card" onclick="showSection('monitoring')">
-                <div class="menu-icon">📊</div>
-                <h3>Monitoring</h3>
-                <p>Pantau kondisi kesehatan harian</p>
-            </div>
-            
-            <div class="menu-card" onclick="showSection('keluhan')">
-                <div class="menu-icon">💊</div>
-                <h3>Keluhan</h3>
-                <p>Catat keluhan kesehatan Anda</p>
-            </div>
-            
-            <div class="menu-card" onclick="showSection('pengingat')">
-                <div class="menu-icon">⏰</div>
-                <h3>Pengingat Obat</h3>
-                <p>Atur jadwal minum obat</p>
-            </div>
-            
-            <div class="menu-card" onclick="showSection('riwayat')">
-                <div class="menu-icon">📚</div>
-                <h3>Riwayat</h3>
-                <p>Lihat riwayat kesehatan</p>
-            </div>
-            
-            <div class="menu-card" onclick="window.location.href='healthmind.html'">
-                <div class="menu-icon">🤖</div>
-                <h3>HealthMind Assistant</h3>
-                <p>Konsultasi dengan AI</p>
-            </div>
-            
-            <div class="menu-card" onclick="window.location.href='account.html'">
-                <div class="menu-icon">👤</div>
-                <h3>Akun Saya</h3>
-                <p>Kelola profil dan pengaturan</p>
-            </div>
+        <div class="nav-item" onclick="showSection('healthmind')">
+            <span>🤖</span>
+            <small>HealthMind</small>
         </div>
-        
-        <!-- Content Sections -->
-        <div id="data-diri-section" class="content-section hidden">
-            <button class="back-button" onclick="showMainMenu()">Kembali</button>
-            <h2>Data Diri</h2>
-            <form onsubmit="event.preventDefault(); saveDataDiri()">
-                <div class="form-group">
-                    <label>Nama Lengkap:</label>
-                    <input type="text" id="nama-lengkap" class="input-field" required>
+        <div class="nav-item" onclick="showSection('account')">
+            <span>👤</span>
+            <small>Akun</small>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <!-- HOME SECTION -->
+        <div id="home" class="section active">
+            <!-- STATS CARD -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="usia">-</div>
+                    <div class="stat-label">Usia</div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Tanggal Lahir:</label>
-                    <input type="date" id="tanggal-lahir" class="input-field" required>
+                <div class="stat-item">
+                    <div class="stat-value" id="imt">-</div>
+                    <div class="stat-label">IMT</div>
                 </div>
-                
+                <div class="stat-item">
+                    <div class="stat-value" id="berat">-</div>
+                    <div class="stat-label">Berat</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="tensi">-</div>
+                    <div class="stat-label">Tensi</div>
+                </div>
+            </div>
+
+            <!-- DATA DIRI CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>📋</span>
+                    <h3>DATA DIRI</h3>
+                </div>
                 <div class="form-group">
-                    <label>Jenis Kelamin:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="radio" name="jenis-kelamin" value="Laki-laki"> Laki-laki
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="radio" name="jenis-kelamin" value="Perempuan"> Perempuan
-                        </label>
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Masukkan nama lengkap" value="Salsabillah Kirana">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Lahir</label>
+                    <input type="date" id="tglLahir" value="2000-01-01">
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="radio" name="jk" value="Laki-laki"> Laki-laki
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="jk" value="Perempuan" checked> Perempuan
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Alergi</label>
+                    <input type="text" id="alergi" placeholder="Contoh: Debu, Makanan Laut" value="Debu, Udang">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Golongan Darah</label>
+                        <select id="goldar">
+                            <option value="">Pilih</option>
+                            <option value="A" selected>A</option>
+                            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
                     </div>
                 </div>
-                
                 <div class="form-group">
-                    <label>Alergi:</label>
-                    <input type="text" id="alergi" class="input-field" placeholder="Contoh: Debu, Makanan laut">
+                    <label>Riwayat Penyakit Dahulu</label>
+                    <textarea id="rpd" rows="2" placeholder="Contoh: Asma, Diabetes">Asma ringan</textarea>
                 </div>
-                
-                <div class="form-group">
-                    <label>Golongan Darah:</label>
-                    <select id="golongan-darah" class="input-field">
-                        <option value="">Pilih Golongan Darah</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="AB">AB</option>
-                        <option value="O">O</option>
-                    </select>
+                <button class="btn btn-primary" onclick="simpanDataDiri()">💾 Simpan Data Diri</button>
+            </div>
+
+            <!-- MONITORING CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>📊</span>
+                    <h3>MONITORING</h3>
                 </div>
-                
-                <div class="form-group">
-                    <label>Riwayat Penyakit Dahulu (RPD):</label>
-                    <textarea id="rpd" class="input-field" rows="3"></textarea>
-                </div>
-                
-                <button type="submit" class="btn-primary">Simpan</button>
-            </form>
-        </div>
-        
-        <div id="monitoring-section" class="content-section hidden">
-            <button class="back-button" onclick="showMainMenu()">Kembali</button>
-            <h2>Monitoring Kesehatan</h2>
-            <form onsubmit="event.preventDefault(); saveMonitoring()">
-                <div class="form-group">
-                    <label>Suhu Tubuh (°C):</label>
-                    <input type="number" id="suhu" step="0.1" class="input-field">
-                </div>
-                
-                <div class="form-group">
-                    <label>Berat Badan (kg):</label>
-                    <input type="number" id="berat" step="0.1" class="input-field">
-                </div>
-                
-                <div class="form-group">
-                    <label>Tinggi Badan (cm):</label>
-                    <input type="number" id="tinggi" step="0.1" class="input-field">
-                </div>
-                
-                <div class="form-group">
-                    <label>Saturasi Oksigen (%):</label>
-                    <input type="number" id="saturasi" min="0" max="100" class="input-field">
-                </div>
-                
-                <div class="form-group">
-                    <label>Tensi Darah:</label>
-                    <input type="text" id="tensi" placeholder="Contoh: 120/80" class="input-field">
-                </div>
-                
-                <div class="form-group">
-                    <label>Golongan Darah:</label>
-                    <select id="monitoring-golongan-darah" class="input-field">
-                        <option value="">Pilih Golongan Darah</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="AB">AB</option>
-                        <option value="O">O</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn-primary">Simpan</button>
-            </form>
-        </div>
-        
-        <div id="keluhan-section" class="content-section hidden">
-            <button class="back-button" onclick="showMainMenu()">Kembali</button>
-            <h2>Keluhan Kesehatan</h2>
-            <form onsubmit="event.preventDefault(); saveKeluhan()">
-                <div class="form-group">
-                    <label>Keluhan yang dirasakan:</label>
-                    <textarea id="keluhan" class="input-field" rows="2" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Mulai kapan terasa:</label>
-                    <input type="date" id="mulai-kapan" class="input-field" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Frekuensi:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
-                            <input type="radio" name="frekuensi" value="terus-menerus"> Terus menerus
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="radio" name="frekuensi" value="kadang-kadang"> Kadang-kadang
-                        </label>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Suhu Tubuh (°C)</label>
+                        <input type="number" id="suhu" step="0.1" placeholder="36.5" value="36.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Berat Badan (kg)</label>
+                        <input type="number" id="berat" step="0.1" placeholder="65" value="58">
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Tingkatan nyeri (1-10):</label>
-                    <input type="number" id="tingkat-nyeri" min="1" max="10" class="input-field">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tinggi Badan (cm)</label>
+                        <input type="number" id="tinggi" placeholder="170" value="165">
+                    </div>
+                    <div class="form-group">
+                        <label>Saturasi (%)</label>
+                        <input type="number" id="saturasi" placeholder="98" value="98">
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Lokasi nyeri:</label>
-                    <input type="text" id="lokasi-nyeri" class="input-field" placeholder="Contoh: Kepala, Perut">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tensi</label>
+                        <input type="text" id="tensi" placeholder="120/80" value="110/70">
+                    </div>
+                    <div class="form-group">
+                        <label>Golongan Darah</label>
+                        <select id="goldarMonitor">
+                            <option value="">Pilih</option>
+                            <option value="A" selected>A</option>
+                            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
+                    </div>
                 </div>
-                
+                <button class="btn btn-primary" onclick="simpanMonitoring()">💾 Simpan Monitoring</button>
+            </div>
+
+            <!-- KELUHAN CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>🤒</span>
+                    <h3>KELUHAN</h3>
+                </div>
                 <div class="form-group">
-                    <label>Gejala tambahan:</label>
+                    <label>Keluhan yang dirasakan</label>
+                    <textarea id="keluhan" rows="2" placeholder="Jelaskan keluhan Anda"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mulai kapan?</label>
+                    <input type="date" id="mulaiKapan">
+                </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="radio" name="frekuensi" value="terus menerus"> Terus menerus
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="frekuensi" value="kadang-kadang" checked> Kadang-kadang
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Tingkat Nyeri (1-10)</label>
+                    <input type="range" id="tingkatNyeri" min="1" max="10" value="5" oninput="this.nextElementSibling.value = this.value">
+                    <output>5</output>
+                </div>
+                <div class="form-group">
+                    <label>Lokasi Nyeri</label>
+                    <input type="text" id="lokasiNyeri" placeholder="Contoh: Kepala, Perut">
+                </div>
+                <div class="form-group">
+                    <label>Gejala Tambahan</label>
                     <div class="checkbox-group">
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="demam"> Demam</label>
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="mual"> Mual/Muntah</label>
@@ -262,168 +522,578 @@
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="batuk"> Batuk/Pilek</label>
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="sesak"> Sesak nafas</label>
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="cemas"> Cemas</label>
-                        <label class="checkbox-item"><input type="checkbox" name="gejala" value="nafsu-makan"> Tidak nafsu makan</label>
+                        <label class="checkbox-item"><input type="checkbox" name="gejala" value="nafsu"> Tidak nafsu makan</label>
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="ruam"> Ruam</label>
                         <label class="checkbox-item"><input type="checkbox" name="gejala" value="gatal"> Gatal</label>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Pernah mengalami sebelumnya:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="radio" name="pernah-sebelumnya" value="iya"> Iya</label>
-                        <label class="checkbox-item"><input type="radio" name="pernah-sebelumnya" value="tidak"> Tidak</label>
-                    </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="radio" name="pernah" value="iya"> Pernah mengalami sebelumnya
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="pernah" value="tidak" checked> Belum pernah
+                    </label>
                 </div>
-                
-                <div class="form-group">
-                    <label>Sedang konsumsi obat?</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="radio" name="konsumsi-obat" value="iya" onclick="toggleObatField(true)"> Iya</label>
-                        <label class="checkbox-item"><input type="radio" name="konsumsi-obat" value="tidak" onclick="toggleObatField(false)"> Tidak</label>
-                    </div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="radio" name="obat" value="iya" onclick="toggleObat(true)"> Sedang konsumsi obat
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="radio" name="obat" value="tidak" onclick="toggleObat(false)" checked> Tidak
+                    </label>
                 </div>
-                
-                <div id="obat-field" class="form-group hidden">
-                    <label>Nama Obat:</label>
-                    <input type="text" id="nama-obat" class="input-field">
+                <div class="form-group" id="obatField" style="display: none;">
+                    <label>Nama Obat</label>
+                    <input type="text" id="namaObat" placeholder="Masukkan nama obat">
                 </div>
-                
-                <button type="submit" class="btn-primary">Simpan</button>
-            </form>
-        </div>
-        
-        <div id="pengingat-section" class="content-section hidden">
-            <button class="back-button" onclick="showMainMenu()">Kembali</button>
-            <h2>Pengingat Obat</h2>
-            <form onsubmit="event.preventDefault(); savePengingatObat()">
-                <div class="form-group">
-                    <label>Jumlah obat:</label>
-                    <input type="number" id="jumlah-obat" min="1" class="input-field" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Dosis obat:</label>
-                    <input type="text" id="dosis" class="input-field" placeholder="Contoh: 500mg" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Bentuk obat:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="radio" name="bentuk-obat" value="tablet"> Tablet</label>
-                        <label class="checkbox-item"><input type="radio" name="bentuk-obat" value="kapsul"> Kapsul</label>
-                        <label class="checkbox-item"><input type="radio" name="bentuk-obat" value="sirup"> Sirup</label>
-                        <label class="checkbox-item"><input type="radio" name="bentuk-obat" value="tetes"> Tetes</label>
-                        <label class="checkbox-item"><input type="radio" name="bentuk-obat" value="puyer"> Puyer</label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Frekuensi:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="radio" name="frekuensi-obat" value="1x1"> 1x1</label>
-                        <label class="checkbox-item"><input type="radio" name="frekuensi-obat" value="2x1"> 2x1</label>
-                        <label class="checkbox-item"><input type="radio" name="frekuensi-obat" value="3x1"> 3x1</label>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Aturan minum:</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="radio" name="aturan-minum" value="sebelum-makan"> Sebelum makan</label>
-                        <label class="checkbox-item"><input type="radio" name="aturan-minum" value="sesudah-makan"> Sesudah makan</label>
-                        <label class="checkbox-item"><input type="radio" name="aturan-minum" value="bila-perlu"> Bila perlu</label>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-primary">Simpan & Ingatkan Saya</button>
-            </form>
-        </div>
-        
-        <div id="riwayat-section" class="content-section hidden">
-            <button class="back-button" onclick="showMainMenu()">Kembali</button>
-            <h2>Riwayat Kesehatan</h2>
-            
-            <div class="riwayat-container" id="riwayat-container">
-                <!-- Riwayat akan diisi oleh JavaScript -->
+                <button class="btn btn-primary" onclick="simpanKeluhan()">💾 Simpan Keluhan</button>
             </div>
-            
-            <button class="btn-primary" onclick="generatePDF()">Simpan ke PDF</button>
+
+            <!-- PENGINGAT OBAT CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>⏰</span>
+                    <h3>PENGINGAT OBAT</h3>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Jumlah Obat</label>
+                        <input type="number" id="jumlahObat" placeholder="Contoh: 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Dosis</label>
+                        <input type="text" id="dosis" placeholder="Contoh: 500mg">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Bentuk Obat</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="radio" name="bentuk" value="tablet"> Tablet</label>
+                        <label class="checkbox-item"><input type="radio" name="bentuk" value="kapsul"> Kapsul</label>
+                        <label class="checkbox-item"><input type="radio" name="bentuk" value="sirup"> Sirup</label>
+                        <label class="checkbox-item"><input type="radio" name="bentuk" value="tetes"> Tetes</label>
+                        <label class="checkbox-item"><input type="radio" name="bentuk" value="puyer"> Puyer</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Frekuensi</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="radio" name="frekuensiObat" value="1x1"> 1x1</label>
+                        <label class="checkbox-item"><input type="radio" name="frekuensiObat" value="2x1"> 2x1</label>
+                        <label class="checkbox-item"><input type="radio" name="frekuensiObat" value="3x1"> 3x1</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Aturan Minum</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="radio" name="aturan" value="sebelum makan"> Sebelum makan</label>
+                        <label class="checkbox-item"><input type="radio" name="aturan" value="sesudah makan"> Sesudah makan</label>
+                        <label class="checkbox-item"><input type="radio" name="aturan" value="bila perlu"> Bila perlu</label>
+                    </div>
+                </div>
+                <button class="btn btn-success" onclick="simpanPengingat()">🔔 Simpan & Ingatkan Saya</button>
+            </div>
+
+            <!-- RIWAYAT CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>📜</span>
+                    <h3>RIWAYAT KESEHATAN</h3>
+                </div>
+                <div id="riwayatList">
+                    <!-- Akan diisi oleh JavaScript -->
+                </div>
+                <button class="btn btn-primary" onclick="simpanKePDF()">📄 Simpan ke PDF</button>
+            </div>
+        </div>
+
+        <!-- HEALTHMIND SECTION -->
+        <div id="healthmind" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <span>🤖</span>
+                    <h3>HEALTHMIND ASSISTANT</h3>
+                </div>
+                <p style="color: #666; margin-bottom: 20px;">Tanyakan apapun tentang kesehatan Anda</p>
+                
+                <!-- Chat Area -->
+                <div id="chatArea" style="height: 400px; overflow-y: auto; border: 2px solid #f0f0f0; border-radius: 16px; padding: 16px; margin-bottom: 16px; background: #f9f9f9;">
+                    <div style="text-align: center; color: #999; padding: 40px;">
+                        <span style="font-size: 48px;">👋</span>
+                        <p>Halo! Ada yang bisa saya bantu?</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <input type="text" id="chatInput" placeholder="Ketik pertanyaan Anda..." style="flex: 1; padding: 16px; border: 2px solid #e0e0e0; border-radius: 30px; font-size: 1rem;">
+                    <button class="btn btn-primary" onclick="sendMessage()" style="width: auto; padding: 16px 24px;">Kirim</button>
+                </div>
+
+                <!-- Media Buttons -->
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="openCamera()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>📷</span> Kamera
+                    </button>
+                    <button class="btn btn-secondary" onclick="openGallery()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>🖼️</span> Galeri
+                    </button>
+                    <button class="btn btn-secondary" onclick="startVoice()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>🎤</span> Mic
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT SECTION -->
+        <div id="account" class="section">
+            <!-- PROFILE CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>👤</span>
+                    <h3>PROFILE</h3>
+                </div>
+                
+                <!-- Foto Profile -->
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px;" id="profileAvatar">
+                        👤
+                    </div>
+                    <button class="btn btn-secondary" onclick="editFoto()">Ganti Foto</button>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label>📧 Email</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="email" id="email" value="salsabillah@example.com" readonly style="flex: 1; background: #f5f5f5;">
+                        <button class="btn btn-secondary" onclick="editEmail()" style="width: auto;">Ubah</button>
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label>👤 Username</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="username" value="salsabillah_kirana" readonly style="flex: 1; background: #f5f5f5;">
+                        <button class="btn btn-secondary" onclick="editUsername()" style="width: auto;">Ubah</button>
+                    </div>
+                </div>
+
+                <!-- Nomor HP -->
+                <div class="form-group">
+                    <label>📱 Nomor HP</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="tel" id="phone" value="081234567890" readonly style="flex: 1; background: #f5f5f5;">
+                        <button class="btn btn-secondary" onclick="editPhone()" style="width: auto;">Ubah</button>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label>🔒 Password</label>
+                    <button class="btn btn-secondary" onclick="editPassword()" style="width: 100%;">Ubah Password</button>
+                </div>
+
+                <!-- Bahasa -->
+                <div class="form-group">
+                    <label>🌐 Bahasa</label>
+                    <select id="language" onchange="changeLanguage()" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #e0e0e0;">
+                        <option value="id">Indonesia</option>
+                        <option value="en">English</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- PENGATURAN CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span>⚙️</span>
+                    <h3>PENGATURAN</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label>📅 Tanggal Daftar</label>
+                    <input type="text" value="1 Januari 2024" readonly style="width: 100%; padding: 12px; background: #f5f5f5; border-radius: 12px; border: none;">
+                </div>
+                
+                <div class="form-group">
+                    <label>🕐 Terakhir Login</label>
+                    <input type="text" id="lastLogin" value="" readonly style="width: 100%; padding: 12px; background: #f5f5f5; border-radius: 12px; border: none;">
+                </div>
+                
+                <button class="btn btn-secondary" onclick="logout()" style="width: 100%; background: #f56565; color: white; border: none;">
+                    🚪 Log Out
+                </button>
+            </div>
         </div>
     </div>
-    
-    <script src="../js/script.js"></script>
+
     <script>
-        function showMainMenu() {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            document.getElementById('main-menu').classList.remove('hidden');
+        // ========== NOTIFICATION ==========
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `custom-notification notification-${type}`;
+            notif.innerHTML = `
+                <span class="notification-icon">${getIcon(type)}</span>
+                <span class="notification-message">${message}</span>
+                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
+            `;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => notif.remove(), 3000);
         }
-        
+
+        function getIcon(type) {
+            switch(type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'info': return 'ℹ️';
+                default: return '✅';
+            }
+        }
+
+        // ========== NAVIGATION ==========
         function showSection(section) {
-            document.getElementById('main-menu').classList.add('hidden');
-            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(section + '-section').classList.remove('hidden');
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
             
-            if (section === 'riwayat') {
-                loadRiwayat();
-            }
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach((item, index) => {
+                item.classList.remove('active');
+                if ((section === 'home' && index === 0) ||
+                    (section === 'healthmind' && index === 1) ||
+                    (section === 'account' && index === 2)) {
+                    item.classList.add('active');
+                }
+            });
         }
-        
-        function toggleObatField(show) {
-            const field = document.getElementById('obat-field');
-            if (show) {
-                field.classList.remove('hidden');
+
+        // ========== DATE ==========
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', options);
+            document.getElementById('lastLogin').value = now.toLocaleString('id-ID');
+        }
+        updateDate();
+
+        // ========== STATS ==========
+        function hitungUsia(tglLahir) {
+            const today = new Date();
+            const birth = new Date(tglLahir);
+            let age = today.getFullYear() - birth.getFullYear();
+            const month = today.getMonth() - birth.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        function hitungIMT(berat, tinggi) {
+            if (!berat || !tinggi) return '-';
+            const tinggiM = tinggi / 100;
+            const imt = berat / (tinggiM * tinggiM);
+            return imt.toFixed(1);
+        }
+
+        function updateStats() {
+            const tglLahir = document.getElementById('tglLahir').value;
+            const berat = parseFloat(document.getElementById('berat').value);
+            const tinggi = parseFloat(document.getElementById('tinggi').value);
+            const tensi = document.getElementById('tensi').value;
+            
+            if (tglLahir) {
+                document.getElementById('usia').textContent = hitungUsia(tglLahir);
+            }
+            
+            document.getElementById('berat').textContent = berat ? berat + ' kg' : '-';
+            document.getElementById('tensi').textContent = tensi || '-';
+            
+            const imt = hitungIMT(berat, tinggi);
+            document.getElementById('imt').textContent = imt;
+        }
+
+        // ========== DATA DIRI ==========
+        function simpanDataDiri() {
+            const data = {
+                nama: document.getElementById('nama').value,
+                tglLahir: document.getElementById('tglLahir').value,
+                jk: document.querySelector('input[name="jk"]:checked')?.value,
+                alergi: document.getElementById('alergi').value,
+                goldar: document.getElementById('goldar').value,
+                rpd: document.getElementById('rpd').value
+            };
+            
+            localStorage.setItem('dataDiri', JSON.stringify(data));
+            updateStats();
+            showNotification('✅ Data diri berhasil disimpan');
+        }
+
+        // ========== MONITORING ==========
+        function simpanMonitoring() {
+            const data = {
+                suhu: document.getElementById('suhu').value,
+                berat: document.getElementById('berat').value,
+                tinggi: document.getElementById('tinggi').value,
+                saturasi: document.getElementById('saturasi').value,
+                tensi: document.getElementById('tensi').value,
+                goldar: document.getElementById('goldarMonitor').value
+            };
+            
+            localStorage.setItem('monitoring', JSON.stringify(data));
+            updateStats();
+            showNotification('✅ Data monitoring berhasil disimpan');
+        }
+
+        // ========== KELUHAN ==========
+        function toggleObat(show) {
+            document.getElementById('obatField').style.display = show ? 'block' : 'none';
+        }
+
+        function simpanKeluhan() {
+            const gejala = [];
+            document.querySelectorAll('input[name="gejala"]:checked').forEach(cb => {
+                gejala.push(cb.value);
+            });
+            
+            const data = {
+                keluhan: document.getElementById('keluhan').value,
+                mulaiKapan: document.getElementById('mulaiKapan').value,
+                frekuensi: document.querySelector('input[name="frekuensi"]:checked')?.value,
+                tingkatNyeri: document.getElementById('tingkatNyeri').value,
+                lokasiNyeri: document.getElementById('lokasiNyeri').value,
+                gejala: gejala,
+                pernah: document.querySelector('input[name="pernah"]:checked')?.value,
+                obat: document.querySelector('input[name="obat"]:checked')?.value,
+                namaObat: document.getElementById('namaObat').value
+            };
+            
+            let riwayat = JSON.parse(localStorage.getItem('riwayatKeluhan') || '[]');
+            riwayat.push({
+                ...data,
+                tanggal: new Date().toISOString()
+            });
+            localStorage.setItem('riwayatKeluhan', JSON.stringify(riwayat));
+            
+            tampilkanRiwayat();
+            showNotification('✅ Keluhan berhasil disimpan');
+        }
+
+        // ========== PENGINGAT OBAT ==========
+        function simpanPengingat() {
+            const data = {
+                jumlah: document.getElementById('jumlahObat').value,
+                dosis: document.getElementById('dosis').value,
+                bentuk: document.querySelector('input[name="bentuk"]:checked')?.value,
+                frekuensi: document.querySelector('input[name="frekuensiObat"]:checked')?.value,
+                aturan: document.querySelector('input[name="aturan"]:checked')?.value
+            };
+            
+            localStorage.setItem('pengingatObat', JSON.stringify(data));
+            
+            // Request notifikasi
+            if (Notification.permission === 'granted') {
+                new Notification('Pengingat Obat', {
+                    body: 'Pengingat obat berhasil disimpan!'
+                });
+            }
+            
+            showNotification('🔔 Pengingat obat berhasil disimpan');
+        }
+
+        // ========== RIWAYAT ==========
+        function tampilkanRiwayat() {
+            const riwayatList = document.getElementById('riwayatList');
+            const riwayat = JSON.parse(localStorage.getItem('riwayatKeluhan') || '[]');
+            
+            if (riwayat.length === 0) {
+                riwayatList.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Belum ada riwayat keluhan</p>';
+                return;
+            }
+            
+            let html = '';
+            riwayat.slice().reverse().forEach(item => {
+                const date = new Date(item.tanggal).toLocaleDateString('id-ID');
+                html += `
+                    <div class="riwayat-item">
+                        <div class="riwayat-date">${date}</div>
+                        <div class="riwayat-title">${item.keluhan || 'Keluhan'}</div>
+                        <div class="riwayat-desc">Mulai: ${item.mulaiKapan || '-'} | Nyeri: ${item.tingkatNyeri || '-'}/10</div>
+                    </div>
+                `;
+            });
+            
+            riwayatList.innerHTML = html;
+        }
+
+        // ========== PDF ==========
+        function simpanKePDF() {
+            showNotification('📄 PDF sedang dibuat...');
+            setTimeout(() => {
+                showNotification('✅ PDF berhasil disimpan');
+            }, 2000);
+        }
+
+        // ========== HEALTHMIND ==========
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const chatArea = document.getElementById('chatArea');
+            
+            // Hapus pesan welcome
+            if (chatArea.children.length === 1 && chatArea.children[0].style.textAlign === 'center') {
+                chatArea.innerHTML = '';
+            }
+            
+            // Tambah pesan user
+            chatArea.innerHTML += `
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 16px; border-radius: 20px 20px 4px 20px; max-width: 70%;">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            input.value = '';
+            
+            // Simulasi respon AI
+            setTimeout(() => {
+                const responses = [
+                    "Terima kasih atas pertanyaannya. Saya sarankan untuk berkonsultasi dengan dokter jika keluhan berlanjut.",
+                    "Berdasarkan gejala yang Anda sebutkan, ini bisa jadi tanda kelelahan. Istirahat yang cukup ya!",
+                    "Saya mencatat keluhan Anda. Jangan lupa minum air putih yang cukup.",
+                    "Untuk informasi lebih lanjut, silakan hubungi layanan kesehatan terdekat."
+                ];
+                const randomRespon = responses[Math.floor(Math.random() * responses.length)];
+                
+                chatArea.innerHTML += `
+                    <div style="display: flex; justify-content: flex-start; margin-bottom: 16px;">
+                        <div style="background: #f0f0f0; color: #333; padding: 12px 16px; border-radius: 20px 20px 20px 4px; max-width: 70%;">
+                            🤖 ${randomRespon}
+                        </div>
+                    </div>
+                `;
+                
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 1000);
+            
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function openCamera() {
+            showNotification('📷 Membuka kamera...', 'info');
+        }
+
+        function openGallery() {
+            showNotification('🖼️ Membuka galeri...', 'info');
+        }
+
+        function startVoice() {
+            showNotification('🎤 Mulai input suara...', 'info');
+        }
+
+        // ========== ACCOUNT ==========
+        function editEmail() {
+            const emailInput = document.getElementById('email');
+            if (emailInput.readOnly) {
+                emailInput.readOnly = false;
+                emailInput.style.background = 'white';
+                showNotification('Silakan ubah email Anda', 'info');
             } else {
-                field.classList.add('hidden');
+                emailInput.readOnly = true;
+                emailInput.style.background = '#f5f5f5';
+                showNotification('✅ Email berhasil diperbarui');
             }
         }
-        
-        function loadRiwayat() {
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
-            const container = document.getElementById('riwayat-container');
-            
-            let html = '<div class="riwayat-card">';
-            
-            // Hitung usia
-            if (userData.profile && userData.profile.tanggalLahir) {
-                const age = calculateAge(userData.profile.tanggalLahir);
-                html += `<p><strong>Usia:</strong> ${age} tahun</p>`;
+
+        function editUsername() {
+            const usernameInput = document.getElementById('username');
+            if (usernameInput.readOnly) {
+                usernameInput.readOnly = false;
+                usernameInput.style.background = 'white';
+                showNotification('Silakan ubah username', 'info');
+            } else {
+                usernameInput.readOnly = true;
+                usernameInput.style.background = '#f5f5f5';
+                showNotification('✅ Username berhasil diperbarui');
             }
-            
-            // Hitung BMI
-            if (userData.monitoring && userData.monitoring.berat && userData.monitoring.tinggi) {
-                const bmi = calculateBMI(userData.monitoring.berat, userData.monitoring.tinggi);
-                html += `<p><strong>IMT:</strong> ${bmi}</p>`;
-            }
-            
-            // Tampilkan data diri
-            if (userData.profile) {
-                html += '<h3>Data Diri</h3>';
-                html += `<p>Nama: ${userData.profile.namaLengkap || '-'}</p>`;
-                html += `<p>Golongan Darah: ${userData.profile.golonganDarah || '-'}</p>`;
-                html += `<p>Alergi: ${userData.profile.alergi || '-'}</p>`;
-            }
-            
-            // Tampilkan monitoring terakhir
-            if (userData.monitoring) {
-                html += '<h3>Monitoring Terakhir</h3>';
-                html += `<p>Suhu: ${userData.monitoring.suhu || '-'} °C</p>`;
-                html += `<p>Berat: ${userData.monitoring.berat || '-'} kg</p>`;
-                html += `<p>Tensi: ${userData.monitoring.tensi || '-'}</p>`;
-            }
-            
-            // Tampilkan keluhan terakhir
-            if (userData.keluhan) {
-                html += '<h3>Keluhan Terakhir</h3>';
-                html += `<p>Keluhan: ${userData.keluhan.keluhan || '-'}</p>`;
-                html += `<p>Mulai: ${userData.keluhan.mulaiKapan || '-'}</p>`;
-            }
-            
-            html += '</div>';
-            container.innerHTML = html;
         }
+
+        function editPhone() {
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput.readOnly) {
+                phoneInput.readOnly = false;
+                phoneInput.style.background = 'white';
+                showNotification('Silakan ubah nomor telepon', 'info');
+            } else {
+                phoneInput.readOnly = true;
+                phoneInput.style.background = '#f5f5f5';
+                showNotification('✅ Nomor telepon berhasil diperbarui');
+            }
+        }
+
+        function editPassword() {
+            const newPass = prompt('Masukkan password baru:');
+            if (newPass) {
+                if (newPass.length < 6) {
+                    showNotification('Password minimal 6 karakter', 'error');
+                } else {
+                    showNotification('✅ Password berhasil diperbarui');
+                }
+            }
+        }
+
+        function editFoto() {
+            const confirm = window.confirm('Ambil foto dari:\nOK = Kamera\nCancel = Galeri');
+            if (confirm) {
+                showNotification('📷 Membuka kamera...', 'info');
+            } else {
+                showNotification('🖼️ Membuka galeri...', 'info');
+            }
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('language').value;
+            const languages = {
+                id: 'Indonesia',
+                en: 'English',
+                ja: 'Japanese',
+                ko: 'Korean'
+            };
+            showNotification(`🌐 Bahasa diubah ke ${languages[lang]}`);
+        }
+
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                showNotification('👋 Sampai jumpa kembali!');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        }
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            tampilkanRiwayat();
+            updateStats();
+            
+            // Load data tersimpan
+            const dataDiri = JSON.parse(localStorage.getItem('dataDiri') || '{}');
+            if (dataDiri.nama) document.getElementById('nama').value = dataDiri.nama;
+            if (dataDiri.tglLahir) document.getElementById('tglLahir').value = dataDiri.tglLahir;
+            
+            const monitoring = JSON.parse(localStorage.getItem('monitoring') || '{}');
+            if (monitoring.berat) document.getElementById('berat').value = monitoring.berat;
+            if (monitoring.tinggi) document.getElementById('tinggi').value = monitoring.tinggi;
+        });
     </script>
 </body>
 </html>

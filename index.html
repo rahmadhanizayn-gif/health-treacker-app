@@ -1,15 +1,285 @@
-<link rel="manifest" href="manifest.json">
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>MAINTAIN HEALTH</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MAINTAIN HEALTH - Perizinan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* SPLASH SCREEN */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .splash-content {
+            text-align: center;
+            color: white;
+        }
+
+        .splash-content h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.8s;
+        }
+
+        .splash-content p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PERMISSION SCREEN */
+        #permission-screen {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .permission-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .permission-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .permission-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .permission-list {
+            margin: 20px 0;
+        }
+
+        .permission-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .permission-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .permission-icon {
+            font-size: 24px;
+        }
+
+        .permission-text h4 {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .permission-text p {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .permission-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 90px;
+        }
+
+        .permission-btn.request {
+            background: #667eea;
+            color: white;
+        }
+
+        .permission-btn.request:hover {
+            background: #5a67d8;
+            transform: scale(1.02);
+        }
+
+        .permission-btn.granted {
+            background: #48bb78;
+            color: white;
+            cursor: default;
+        }
+
+        .permission-btn.denied {
+            background: #f56565;
+            color: white;
+        }
+
+        .permission-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .permission-status {
+            font-size: 1.2rem;
+            margin-left: 8px;
+        }
+
+        #continue-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        #continue-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #continue-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #continue-btn.secondary {
+            background: #48bb78;
+        }
+
+        /* NOTIFICATION */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 350px;
+        }
+
+        .notification-success {
+            border-left: 4px solid #48bb78;
+        }
+
+        .notification-error {
+            border-left: 4px solid #f56565;
+        }
+
+        .notification-info {
+            border-left: 4px solid #4299e1;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+        }
+
+        .notification-message {
+            color: #333;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .notification-close {
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 4px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-    <!-- Splash Screen -->
-    <div id="splash-screen" class="splash-screen">
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
         <div class="splash-content">
             <h1>MAINTAIN HEALTH</h1>
             <p>by Salsabillah Kirana Rahmadani</p>
@@ -17,87 +287,520 @@
         </div>
     </div>
 
-    <!-- Halaman Izin -->
-    <div id="permission-page" class="page hidden">
-        <h2>Izin Aplikasi</h2>
+    <!-- PERMISSION SCREEN -->
+    <div id="permission-screen">
+        <div class="permission-header">
+            <h2>🔐 Izin Aplikasi</h2>
+            <p>Izinkan akses berikut untuk pengalaman terbaik</p>
+        </div>
+
         <div class="permission-list">
-            <div class="permission-item">
-                <span>📍 Izin Lokasi</span>
-                <button onclick="grantPermission('lokasi')">Izinkan</button>
-            </div>
-            <div class="permission-item">
-                <span>💾 Izin Penyimpanan</span>
-                <button onclick="grantPermission('penyimpanan')">Izinkan</button>
-            </div>
-            <div class="permission-item">
-                <span>📊 Izin Akses Data</span>
-                <button onclick="grantPermission('data')">Izinkan</button>
-            </div>
-            <div class="permission-item">
-                <span>🔔 Izin Notifikasi</span>
-                <button onclick="grantPermission('notifikasi')">Izinkan</button>
-            </div>
-            <div class="permission-item">
-                <span>📷 Izin Kamera</span>
-                <button onclick="grantPermission('kamera')">Izinkan</button>
-            </div>
-            <div class="permission-item">
-                <span>🎤 Izin Mic</span>
-                <button onclick="grantPermission('mic')">Izinkan</button>
-            </div>
-        </div>
-        <button id="next-to-login" class="btn-primary" onclick="goToLogin()" disabled>Lanjutkan</button>
-    </div>
-
-    <!-- Halaman Login -->
-    <div id="login-page" class="page hidden">
-        <div class="login-container">
-            <h1>WELCOME TO MAINTAIN HEALTH</h1>
-            
-            <div id="login-options" class="login-options">
-                <h3>Pilih Metode Login</h3>
-                <button class="btn-login" onclick="showEmailLogin()">Masuk dengan Email</button>
-                <button class="btn-login" onclick="showPhoneLogin()">Masuk dengan Nomor Telepon</button>
-                <button class="btn-link" onclick="showForgotPassword()">Lupa Password?</button>
-            </div>
-
-            <div id="email-login" class="login-form hidden">
-                <h3>Login dengan Email</h3>
-                <input type="email" id="email" placeholder="Email" class="input-field">
-                <input type="password" id="password" placeholder="Password" class="input-field">
-                <button class="btn-primary" onclick="processLogin('email')">Login</button>
-                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
-            </div>
-
-            <div id="phone-login" class="login-form hidden">
-                <h3>Login dengan Nomor Telepon</h3>
-                <input type="tel" id="phone" placeholder="Nomor Telepon" class="input-field">
-                <input type="password" id="phone-password" placeholder="Password" class="input-field">
-                <button class="btn-primary" onclick="processLogin('phone')">Login</button>
-                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
-            </div>
-
-            <div id="forgot-password" class="login-form hidden">
-                <h3>Lupa Password</h3>
-                <p>Masukkan email/nomor telepon Anda</p>
-                <input type="text" id="forgot-input" placeholder="Email/Nomor Telepon" class="input-field">
-                <button class="btn-primary" onclick="sendOTP()">Kirim Kode OTP</button>
-                
-                <div id="otp-section" class="hidden">
-                    <p>Kode OTP telah dikirim</p>
-                    <input type="text" id="otp" placeholder="Masukkan Kode OTP" class="input-field">
-                    <button class="btn-primary" onclick="verifyOTP()">Verifikasi OTP</button>
-                    <button class="btn-link" onclick="resendOTP()">Kirim Ulang OTP</button>
+            <!-- Notifikasi -->
+            <div class="permission-item" id="perm-notification">
+                <div class="permission-info">
+                    <span class="permission-icon">🔔</span>
+                    <div class="permission-text">
+                        <h4>Notifikasi</h4>
+                        <p>Menerima pengingat dan notifikasi</p>
+                    </div>
                 </div>
-                
-                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
+                <button class="permission-btn request" id="btn-notification" onclick="requestPermission('notification')">Izinkan</button>
+            </div>
+
+            <!-- Lokasi -->
+            <div class="permission-item" id="perm-location">
+                <div class="permission-info">
+                    <span class="permission-icon">📍</span>
+                    <div class="permission-text">
+                        <h4>Lokasi</h4>
+                        <p>Mendeteksi lokasi untuk layanan</p>
+                    </div>
+                </div>
+                <button class="permission-btn request" id="btn-location" onclick="requestPermission('location')">Izinkan</button>
+            </div>
+
+            <!-- Kamera -->
+            <div class="permission-item" id="perm-camera">
+                <div class="permission-info">
+                    <span class="permission-icon">📷</span>
+                    <div class="permission-text">
+                        <h4>Kamera</h4>
+                        <p>Mengambil foto profil & resep</p>
+                    </div>
+                </div>
+                <button class="permission-btn request" id="btn-camera" onclick="requestPermission('camera')">Izinkan</button>
+            </div>
+
+            <!-- Mikrofon -->
+            <div class="permission-item" id="perm-mic">
+                <div class="permission-info">
+                    <span class="permission-icon">🎤</span>
+                    <div class="permission-text">
+                        <h4>Mikrofon</h4>
+                        <p>Input suara untuk pencarian</p>
+                    </div>
+                </div>
+                <button class="permission-btn request" id="btn-mic" onclick="requestPermission('mic')">Izinkan</button>
+            </div>
+
+            <!-- Penyimpanan -->
+            <div class="permission-item" id="perm-storage">
+                <div class="permission-info">
+                    <span class="permission-icon">💾</span>
+                    <div class="permission-text">
+                        <h4>Penyimpanan</h4>
+                        <p>Menyimpan data dan file</p>
+                    </div>
+                </div>
+                <button class="permission-btn request" id="btn-storage" onclick="requestPermission('storage')">Izinkan</button>
+            </div>
+
+            <!-- Akses Data -->
+            <div class="permission-item" id="perm-data">
+                <div class="permission-info">
+                    <span class="permission-icon">📊</span>
+                    <div class="permission-text">
+                        <h4>Akses Data</h4>
+                        <p>Mengelola data kesehatan</p>
+                    </div>
+                </div>
+                <button class="permission-btn request" id="btn-data" onclick="requestPermission('data')">Izinkan</button>
             </div>
         </div>
+
+        <button id="continue-btn" onclick="continueToLogin()">Lanjutkan ke Login</button>
     </div>
 
-    <!-- Notifikasi -->
-    <div id="notification" class="notification hidden"></div>
+    <script>
+        // STATE MANAGEMENT
+        let permissions = {
+            notification: false,
+            location: false,
+            camera: false,
+            mic: false,
+            storage: false,
+            data: false
+        };
 
-    <script src="js/script.js"></script>
+        let permissionResults = {};
+
+        // ========== SPLASH SCREEN ==========
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.getElementById('permission-screen').style.display = 'block';
+                showNotification('👋 Selamat datang di MAINTAIN HEALTH', 'info');
+                
+                // Cek status permission yang sudah ada
+                checkExistingPermissions();
+            }, 500);
+        }, 3000);
+
+        // ========== NOTIFICATION SYSTEM ==========
+        function showNotification(message, type = 'success') {
+            const notif = document.createElement('div');
+            notif.className = `custom-notification notification-${type}`;
+            notif.innerHTML = `
+                <span class="notification-icon">${getIcon(type)}</span>
+                <span class="notification-message">${message}</span>
+                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
+            `;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                if (notif.parentElement) {
+                    notif.remove();
+                }
+            }, 4000);
+        }
+
+        function getIcon(type) {
+            switch(type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'info': return 'ℹ️';
+                default: return '✅';
+            }
+        }
+
+        // ========== CHECK EXISTING PERMISSIONS ==========
+        function checkExistingPermissions() {
+            // Cek notifikasi
+            if (Notification.permission === 'granted') {
+                updatePermissionUI('notification', true);
+            }
+            
+            // Cek permission lain (simulasi dari localStorage)
+            const savedPermissions = JSON.parse(localStorage.getItem('permissions') || '{}');
+            for (let perm in savedPermissions) {
+                if (savedPermissions[perm]) {
+                    updatePermissionUI(perm, true);
+                }
+            }
+        }
+
+        // ========== PERMISSION REQUESTS ==========
+        async function requestPermission(type) {
+            const btn = document.getElementById(`btn-${type}`);
+            const originalText = btn.textContent;
+            
+            btn.textContent = '⏳ Meminta...';
+            btn.disabled = true;
+            
+            try {
+                switch(type) {
+                    case 'notification':
+                        await requestNotificationPermission();
+                        break;
+                    case 'location':
+                        await requestLocationPermission();
+                        break;
+                    case 'camera':
+                        await requestCameraPermission();
+                        break;
+                    case 'mic':
+                        await requestMicrophonePermission();
+                        break;
+                    case 'storage':
+                        await requestStoragePermission();
+                        break;
+                    case 'data':
+                        await requestDataPermission();
+                        break;
+                }
+            } catch (error) {
+                console.error('Permission error:', error);
+                btn.textContent = originalText;
+                btn.disabled = false;
+                showNotification(`Gagal meminta izin ${type}`, 'error');
+            }
+        }
+
+        // NOTIFICATION PERMISSION
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                showNotification('Browser tidak mendukung notifikasi', 'error');
+                resetPermissionButton('notification');
+                return;
+            }
+            
+            try {
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    updatePermissionUI('notification', true);
+                    showNotification('✅ Notifikasi diizinkan');
+                    
+                    // Demo notifikasi
+                    new Notification('MAINTAIN HEALTH', {
+                        body: 'Notifikasi berhasil diaktifkan!',
+                        icon: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23667eea\'%3E%3Cpath d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z\'/%3E%3C/svg%3E'
+                    });
+                } else {
+                    showNotification('❌ Izin notifikasi ditolak', 'error');
+                    resetPermissionButton('notification');
+                }
+            } catch (error) {
+                console.error('Notification error:', error);
+                resetPermissionButton('notification');
+            }
+        }
+
+        // LOCATION PERMISSION
+        async function requestLocationPermission() {
+            if (!navigator.geolocation) {
+                showNotification('Browser tidak mendukung geolokasi', 'error');
+                resetPermissionButton('location');
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    updatePermissionUI('location', true);
+                    showNotification('📍 Lokasi berhasil diakses');
+                    
+                    // Simpan koordinat (opsional)
+                    const coords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    localStorage.setItem('userLocation', JSON.stringify(coords));
+                },
+                (error) => {
+                    let message = 'Gagal mengakses lokasi: ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message += 'Izin ditolak';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message += 'Lokasi tidak tersedia';
+                            break;
+                        case error.TIMEOUT:
+                            message += 'Waktu habis';
+                            break;
+                    }
+                    showNotification(message, 'error');
+                    resetPermissionButton('location');
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        // CAMERA PERMISSION
+        async function requestCameraPermission() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true,
+                    audio: false 
+                });
+                
+                // Stop semua track setelah berhasil
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                
+                updatePermissionUI('camera', true);
+                showNotification('📷 Kamera diizinkan');
+                
+                // Simpan status
+                localStorage.setItem('cameraPermission', 'granted');
+                
+            } catch (error) {
+                console.error('Camera error:', error);
+                
+                let message = 'Gagal mengakses kamera: ';
+                if (error.name === 'NotAllowedError') {
+                    message += 'Izin ditolak';
+                } else if (error.name === 'NotFoundError') {
+                    message += 'Kamera tidak ditemukan';
+                } else {
+                    message += error.message;
+                }
+                
+                showNotification(message, 'error');
+                resetPermissionButton('camera');
+            }
+        }
+
+        // MICROPHONE PERMISSION
+        async function requestMicrophonePermission() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: true,
+                    video: false 
+                });
+                
+                stream.getTracks().forEach(track => track.stop());
+                
+                updatePermissionUI('mic', true);
+                showNotification('🎤 Mikrofon diizinkan');
+                
+                localStorage.setItem('micPermission', 'granted');
+                
+            } catch (error) {
+                console.error('Microphone error:', error);
+                
+                let message = 'Gagal mengakses mikrofon: ';
+                if (error.name === 'NotAllowedError') {
+                    message += 'Izin ditolak';
+                } else if (error.name === 'NotFoundError') {
+                    message += 'Mikrofon tidak ditemukan';
+                } else {
+                    message += error.message;
+                }
+                
+                showNotification(message, 'error');
+                resetPermissionButton('mic');
+            }
+        }
+
+        // STORAGE PERMISSION (MENGGUNAKAN FILE SYSTEM API)
+        async function requestStoragePermission() {
+            // Cek apakah browser mendukung File System Access API
+            if ('showDirectoryPicker' in window) {
+                try {
+                    const dirHandle = await window.showDirectoryPicker();
+                    // Berhasil mendapat akses
+                    updatePermissionUI('storage', true);
+                    showNotification('💾 Penyimpanan diizinkan');
+                    
+                    // Simpan handle (contoh saja)
+                    localStorage.setItem('storagePermission', 'granted');
+                    
+                } catch (error) {
+                    console.error('Storage error:', error);
+                    if (error.name === 'AbortError' || error.name === 'SecurityError') {
+                        // User membatalkan atau menolak
+                        showNotification('❌ Izin penyimpanan ditolak', 'error');
+                    } else {
+                        showNotification('Gagal mengakses penyimpanan', 'error');
+                    }
+                    resetPermissionButton('storage');
+                }
+            } else {
+                // Fallback untuk browser yang tidak mendukung
+                // Gunakan simulasi dengan localStorage
+                const granted = confirm('Izinkan MAINTAIN HEALTH menyimpan data di perangkat Anda?');
+                
+                if (granted) {
+                    updatePermissionUI('storage', true);
+                    showNotification('💾 Penyimpanan diizinkan (mode terbatas)');
+                    localStorage.setItem('storagePermission', 'granted');
+                } else {
+                    showNotification('❌ Izin penyimpanan ditolak', 'error');
+                    resetPermissionButton('storage');
+                }
+            }
+        }
+
+        // DATA PERMISSION (MENGGUNAKAN INDEXED DB)
+        async function requestDataPermission() {
+            try {
+                // Coba akses IndexedDB
+                const request = indexedDB.open('MaintainHealthDB', 1);
+                
+                request.onsuccess = (event) => {
+                    updatePermissionUI('data', true);
+                    showNotification('📊 Akses data diizinkan');
+                    
+                    const db = event.target.result;
+                    db.close();
+                    
+                    localStorage.setItem('dataPermission', 'granted');
+                };
+                
+                request.onerror = (event) => {
+                    console.error('IndexedDB error:', event.target.error);
+                    showNotification('Gagal mengakses database', 'error');
+                    resetPermissionButton('data');
+                };
+                
+            } catch (error) {
+                console.error('Data permission error:', error);
+                
+                // Fallback ke localStorage
+                const granted = confirm('Izinkan MAINTAIN HEALTH mengelola data kesehatan Anda?');
+                
+                if (granted) {
+                    updatePermissionUI('data', true);
+                    showNotification('📊 Akses data diizinkan (mode sederhana)');
+                    localStorage.setItem('dataPermission', 'granted');
+                } else {
+                    showNotification('❌ Izin akses data ditolak', 'error');
+                    resetPermissionButton('data');
+                }
+            }
+        }
+
+        // ========== UI UPDATE FUNCTIONS ==========
+        function updatePermissionUI(type, granted) {
+            const btn = document.getElementById(`btn-${type}`);
+            const permItem = document.getElementById(`perm-${type}`);
+            
+            permissions[type] = granted;
+            permissionResults[type] = granted;
+            
+            if (granted) {
+                btn.textContent = '✓ Diizinkan';
+                btn.className = 'permission-btn granted';
+                btn.disabled = true;
+                
+                // Update border color
+                permItem.style.borderLeftColor = '#48bb78';
+                
+                // Simpan ke localStorage
+                let saved = JSON.parse(localStorage.getItem('permissions') || '{}');
+                saved[type] = true;
+                localStorage.setItem('permissions', JSON.stringify(saved));
+            }
+            
+            // Cek apakah semua sudah diizinkan
+            checkAllPermissions();
+        }
+
+        function resetPermissionButton(type) {
+            const btn = document.getElementById(`btn-${type}`);
+            btn.textContent = 'Coba Lagi';
+            btn.className = 'permission-btn request';
+            btn.disabled = false;
+            
+            permissions[type] = false;
+            
+            // Update localStorage
+            let saved = JSON.parse(localStorage.getItem('permissions') || '{}');
+            saved[type] = false;
+            localStorage.setItem('permissions', JSON.stringify(saved));
+            
+            checkAllPermissions();
+        }
+
+        function checkAllPermissions() {
+            const allGranted = Object.values(permissions).every(v => v === true);
+            const continueBtn = document.getElementById('continue-btn');
+            
+            if (allGranted) {
+                continueBtn.classList.add('active');
+                continueBtn.classList.add('secondary');
+                continueBtn.textContent = '✅ Semua izin diberikan - Lanjutkan';
+                showNotification('🎉 Semua izin telah diberikan!', 'success');
+            } else {
+                const grantedCount = Object.values(permissions).filter(v => v).length;
+                const totalCount = Object.keys(permissions).length;
+                
+                if (grantedCount > 0) {
+                    continueBtn.classList.add('active');
+                    continueBtn.textContent = `➡️ Lanjutkan (${grantedCount}/${totalCount} izin)`;
+                } else {
+                    continueBtn.classList.remove('active');
+                    continueBtn.textContent = 'Lanjutkan ke Login';
+                }
+            }
+        }
+
+        // ========== CONTINUE TO LOGIN ==========
+        function continueToLogin() {
+            const grantedCount = Object.values(permissions).filter(v => v).length;
+            
+            if (grantedCount < 3) {
+                const confirm = window.confirm('Beberapa izin belum diberikan. Apakah Anda tetap ingin melanjutkan? (Beberapa fitur mungkin tidak berfungsi optimal)');
+                if (!confirm) return;
+            }
+            
+            showNotification('Mengalihkan ke halaman login...', 'info');
+            
+            // Simpan timestamp
+            localStorage.setItem('lastPermissionCheck', new Date().toISOString());
+            
+            // Redirect ke login (atau tampilkan login di sini)
+            setTimeout(() => {
+                // Untuk demo, kita akan tampilkan alert
+                alert('LANJUT KE HALAMAN LOGIN\n\nKarena ini demo, klik OK untuk ke halaman berikutnya');
+                window.location.href = 'pages/login.html';
+            }, 1500);
+        }
+
+        // ========== HELPER FUNCTIONS ==========
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome')) return 'Chrome';
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari')) return 'Safari';
+            if (ua.includes('Edge')) return 'Edge';
+            return 'Unknown';
+        }
+
+        // Log untuk debugging
+        console.log('Browser:', getBrowserInfo());
+        console.log('Notification API:', 'Notification' in window);
+        console.log('Geolocation API:', 'geolocation' in navigator);
+        console.log('Media Devices:', 'mediaDevices' in navigator);
+    </script>
 </body>
 </html>
