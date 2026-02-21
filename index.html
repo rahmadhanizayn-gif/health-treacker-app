@@ -1,0 +1,103 @@
+<link rel="manifest" href="manifest.json">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>MAINTAIN HEALTH</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <h1>MAINTAIN HEALTH</h1>
+            <p>by Salsabillah Kirana Rahmadani</p>
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- Halaman Izin -->
+    <div id="permission-page" class="page hidden">
+        <h2>Izin Aplikasi</h2>
+        <div class="permission-list">
+            <div class="permission-item">
+                <span>📍 Izin Lokasi</span>
+                <button onclick="grantPermission('lokasi')">Izinkan</button>
+            </div>
+            <div class="permission-item">
+                <span>💾 Izin Penyimpanan</span>
+                <button onclick="grantPermission('penyimpanan')">Izinkan</button>
+            </div>
+            <div class="permission-item">
+                <span>📊 Izin Akses Data</span>
+                <button onclick="grantPermission('data')">Izinkan</button>
+            </div>
+            <div class="permission-item">
+                <span>🔔 Izin Notifikasi</span>
+                <button onclick="grantPermission('notifikasi')">Izinkan</button>
+            </div>
+            <div class="permission-item">
+                <span>📷 Izin Kamera</span>
+                <button onclick="grantPermission('kamera')">Izinkan</button>
+            </div>
+            <div class="permission-item">
+                <span>🎤 Izin Mic</span>
+                <button onclick="grantPermission('mic')">Izinkan</button>
+            </div>
+        </div>
+        <button id="next-to-login" class="btn-primary" onclick="goToLogin()" disabled>Lanjutkan</button>
+    </div>
+
+    <!-- Halaman Login -->
+    <div id="login-page" class="page hidden">
+        <div class="login-container">
+            <h1>WELCOME TO MAINTAIN HEALTH</h1>
+            
+            <div id="login-options" class="login-options">
+                <h3>Pilih Metode Login</h3>
+                <button class="btn-login" onclick="showEmailLogin()">Masuk dengan Email</button>
+                <button class="btn-login" onclick="showPhoneLogin()">Masuk dengan Nomor Telepon</button>
+                <button class="btn-link" onclick="showForgotPassword()">Lupa Password?</button>
+            </div>
+
+            <div id="email-login" class="login-form hidden">
+                <h3>Login dengan Email</h3>
+                <input type="email" id="email" placeholder="Email" class="input-field">
+                <input type="password" id="password" placeholder="Password" class="input-field">
+                <button class="btn-primary" onclick="processLogin('email')">Login</button>
+                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
+            </div>
+
+            <div id="phone-login" class="login-form hidden">
+                <h3>Login dengan Nomor Telepon</h3>
+                <input type="tel" id="phone" placeholder="Nomor Telepon" class="input-field">
+                <input type="password" id="phone-password" placeholder="Password" class="input-field">
+                <button class="btn-primary" onclick="processLogin('phone')">Login</button>
+                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
+            </div>
+
+            <div id="forgot-password" class="login-form hidden">
+                <h3>Lupa Password</h3>
+                <p>Masukkan email/nomor telepon Anda</p>
+                <input type="text" id="forgot-input" placeholder="Email/Nomor Telepon" class="input-field">
+                <button class="btn-primary" onclick="sendOTP()">Kirim Kode OTP</button>
+                
+                <div id="otp-section" class="hidden">
+                    <p>Kode OTP telah dikirim</p>
+                    <input type="text" id="otp" placeholder="Masukkan Kode OTP" class="input-field">
+                    <button class="btn-primary" onclick="verifyOTP()">Verifikasi OTP</button>
+                    <button class="btn-link" onclick="resendOTP()">Kirim Ulang OTP</button>
+                </div>
+                
+                <button class="btn-link" onclick="backToLoginOptions()">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifikasi -->
+    <div id="notification" class="notification hidden"></div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
