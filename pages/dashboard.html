@@ -375,19 +375,19 @@
             <!-- STATS CARD -->
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-value" id="usia">-</div>
+                    <div class="stat-value" id="stat-usia">-</div>
                     <div class="stat-label">Usia</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="imt">-</div>
+                    <div class="stat-value" id="stat-imt">-</div>
                     <div class="stat-label">IMT</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="berat">-</div>
+                    <div class="stat-value" id="stat-berat">-</div>
                     <div class="stat-label">Berat</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="tensi">-</div>
+                    <div class="stat-value" id="stat-tensi">-</div>
                     <div class="stat-label">Tensi</div>
                 </div>
             </div>
@@ -626,9 +626,13 @@
                 </div>
 
                 <!-- Input Area -->
-                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
                     <input type="text" id="chatInput" placeholder="Ketik pertanyaan Anda..." style="flex: 1; padding: 16px; border: 2px solid #e0e0e0; border-radius: 30px; font-size: 1rem;">
                     <button class="btn btn-primary" onclick="sendMessage()" style="width: auto; padding: 16px 24px;">Kirim</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; margin-bottom:16px;">
+                    <button class="btn btn-secondary" onclick="checkProxyStatus()" style="width: auto;">🚀 Status Proxy</button>
+                    <div id="proxyStatus" style="color:#666; font-size:0.9rem;">Proxy: <span id="proxyLabel">checking...</span></div>
                 </div>
 
                 <!-- Media Buttons -->
@@ -806,16 +810,16 @@
             const berat = parseFloat(document.getElementById('berat').value);
             const tinggi = parseFloat(document.getElementById('tinggi').value);
             const tensi = document.getElementById('tensi').value;
-            
+
             if (tglLahir) {
-                document.getElementById('usia').textContent = hitungUsia(tglLahir);
+                document.getElementById('stat-usia').textContent = hitungUsia(tglLahir);
             }
-            
-            document.getElementById('berat').textContent = berat ? berat + ' kg' : '-';
-            document.getElementById('tensi').textContent = tensi || '-';
-            
+
+            document.getElementById('stat-berat').textContent = berat ? berat + ' kg' : '-';
+            document.getElementById('stat-tensi').textContent = tensi || '-';
+
             const imt = hitungIMT(berat, tinggi);
-            document.getElementById('imt').textContent = imt;
+            document.getElementById('stat-imt').textContent = imt;
         }
 
         // ========== DATA DIRI ==========
@@ -873,15 +877,51 @@
                 namaObat: document.getElementById('namaObat').value
             };
             
+            // analyze symptoms to provide a simple possible diagnosis
+            const diagnosis = analyzeSymptoms(data);
+
             let riwayat = JSON.parse(localStorage.getItem('riwayatKeluhan') || '[]');
             riwayat.push({
                 ...data,
+                diagnosis: diagnosis,
                 tanggal: new Date().toISOString()
             });
             localStorage.setItem('riwayatKeluhan', JSON.stringify(riwayat));
             
             tampilkanRiwayat();
             showNotification('✅ Keluhan berhasil disimpan');
+        }
+
+        // Simple rule-based symptom analyzer (very basic - for demonstration only)
+        function analyzeSymptoms(data) {
+            const gejala = data.gejala || [];
+            const lokasi = (data.lokasiNyeri || '').toLowerCase();
+            const rendah = [];
+
+            if (gejala.includes('demam') && gejala.includes('batuk')) {
+                rendah.push('Infeksi saluran pernapasan');
+            }
+            if (gejala.includes('sesak') || lokasi.includes('dada')) {
+                rendah.push('Kemungkinan masalah pernapasan / asma');
+            }
+            if (gejala.includes('mual') && gejala.includes('nyeri')) {
+                rendah.push('Gangguan pencernaan');
+            }
+            if (gejala.includes('ruam') || gejala.includes('gatal')) {
+                rendah.push('Alergi / Dermatitis');
+            }
+            if (data.tingkatNyeri >= 7) {
+                rendah.push('Nyeri berat - pertimbangkan konsultasi segera');
+            }
+
+            // Check past disease history (rpd) saved in dataDiri
+            const dataDiri = JSON.parse(localStorage.getItem('dataDiri') || '{}');
+            if (dataDiri.rpd && /asma/i.test(dataDiri.rpd)) {
+                rendah.push('Riwayat asma (perhatikan gejala pernapasan)');
+            }
+
+            if (rendah.length === 0) return 'Tidak ada indikasi spesifik (perlu evaluasi lebih lanjut)';
+            return rendah.join(' • ');
         }
 
         // ========== PENGINGAT OBAT ==========
@@ -919,11 +959,15 @@
             let html = '';
             riwayat.slice().reverse().forEach(item => {
                 const date = new Date(item.tanggal).toLocaleDateString('id-ID');
+                const gejala = (item.gejala || []).length ? (item.gejala || []).join(', ') : '-';
+                const diagnosis = item.diagnosis || '-';
                 html += `
                     <div class="riwayat-item">
                         <div class="riwayat-date">${date}</div>
                         <div class="riwayat-title">${item.keluhan || 'Keluhan'}</div>
                         <div class="riwayat-desc">Mulai: ${item.mulaiKapan || '-'} | Nyeri: ${item.tingkatNyeri || '-'}/10</div>
+                        <div class="riwayat-desc">Gejala: ${gejala}</div>
+                        <div class="riwayat-desc">Diagnosa (saran): ${diagnosis}</div>
                     </div>
                 `;
             });
@@ -964,29 +1008,244 @@
             
             input.value = '';
             
-            // Simulasi respon AI
-            setTimeout(() => {
-                const responses = [
-                    "Terima kasih atas pertanyaannya. Saya sarankan untuk berkonsultasi dengan dokter jika keluhan berlanjut.",
-                    "Berdasarkan gejala yang Anda sebutkan, ini bisa jadi tanda kelelahan. Istirahat yang cukup ya!",
-                    "Saya mencatat keluhan Anda. Jangan lupa minum air putih yang cukup.",
-                    "Untuk informasi lebih lanjut, silakan hubungi layanan kesehatan terdekat."
-                ];
-                const randomRespon = responses[Math.floor(Math.random() * responses.length)];
+            // Try proxy first
+            const proxyUrl = 'http://localhost:3000/api/chat';
+            
+            // Show typing indicator
+            chatArea.innerHTML += `
+                <div id="ai-typing" style="display:flex; justify-content:flex-start; margin-bottom:16px; color:#999;">
+                    <div style="background:#f0f0f0; padding:12px 16px; border-radius:20px 20px 20px 4px;">🤖 ...</div>
+                </div>
+            `;
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // Call proxy or fallback to local
+            const userContext = getUserSummary();
+
+            fetch(proxyUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, userContext })
+            })
+            .then(resp => {
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                return resp.json();
+            })
+            .then(data => {
+                const typing = document.getElementById('ai-typing');
+                if (typing) typing.remove();
                 
+                const reply = data.reply || null;
+                if (reply) {
+                    chatArea.innerHTML += `
+                        <div style="display: flex; justify-content: flex-start; margin-bottom: 16px;">
+                            <div style="background: #f0f0f0; color: #333; padding: 12px 16px; border-radius: 20px 20px 20px 4px; max-width: 70%;">
+                                🤖 ${reply}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const fallback = generateHealthMindReply(message);
+                    chatArea.innerHTML += `
+                        <div style="display: flex; justify-content: flex-start; margin-bottom: 16px;">
+                            <div style="background: #f0f0f0; color: #333; padding: 12px 16px; border-radius: 20px 20px 20px 4px; max-width: 70%;">
+                                🤖 ${fallback}
+                            </div>
+                        </div>
+                    `;
+                }
+                chatArea.scrollTop = chatArea.scrollHeight;
+            })
+            .catch(err => {
+                console.warn('⚠️ Proxy not available, using local', err.message);
+                const typing = document.getElementById('ai-typing');
+                if (typing) typing.remove();
+                
+                const fallback = generateHealthMindReply(message);
                 chatArea.innerHTML += `
                     <div style="display: flex; justify-content: flex-start; margin-bottom: 16px;">
                         <div style="background: #f0f0f0; color: #333; padding: 12px 16px; border-radius: 20px 20px 20px 4px; max-width: 70%;">
-                            🤖 ${randomRespon}
+                            🤖 ${fallback}
                         </div>
                     </div>
                 `;
-                
                 chatArea.scrollTop = chatArea.scrollHeight;
-            }, 1000);
+            });
             
             chatArea.scrollTop = chatArea.scrollHeight;
         }
+
+        // ========== HEALTHMIND HELPERS ==========
+        function getUserSummary() {
+            const dataDiri = JSON.parse(localStorage.getItem('dataDiri') || '{}');
+            const monitoring = JSON.parse(localStorage.getItem('monitoring') || '{}');
+            const name = dataDiri.nama || 'Pengguna';
+            const alergi = dataDiri.alergi || '-';
+            const rpd = dataDiri.rpd || '-';
+            const suhu = monitoring.suhu || '-';
+            const berat = monitoring.berat ? monitoring.berat + ' kg' : '-';
+            const tinggi = monitoring.tinggi ? monitoring.tinggi + ' cm' : '-';
+            const tensi = monitoring.tensi || '-';
+
+            return { name, alergi, rpd, suhu, berat, tinggi, tensi };
+        }
+
+        function chooseRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateHealthMindReply(message) {
+            const m = message.toLowerCase();
+            const user = getUserSummary();
+
+            // Creator question
+            if (m.includes('siapa') && (m.includes('buat') || m.includes('pembu') || m.includes('kreator'))) {
+                return 'aku yang buat dia';
+            }
+
+            // Ask about riwayat / alergi / penyakit / data diri
+            if (m.includes('riwayat') || m.includes('alergi') || m.includes('sakit') || m.includes('penyakit') || m.includes('alergiku') || m.includes('data saya')) {
+                const templates = [
+                    `Nama: ${user.name}. Alergi: ${user.alergi}. Riwayat penyakit: ${user.rpd}.`,
+                    `📋 Data ${user.name}: alergi → ${user.alergi}; riwayat penyakit → ${user.rpd}. Pantauan: berat ${user.berat}, tensi ${user.tensi}.`,
+                    `Saya simpan: alergi = ${user.alergi}. Penyakit sebelumnya: ${user.rpd}. Hubungi dokter jika ada reaksi baru.`,
+                    `Riwayat ${user.name}: alergi [${user.alergi}], penyakit dahulu [${user.rpd}]. Vitamin/suplemen apa yang rutin diminum?`
+                ];
+                return chooseRandom(templates);
+            }
+
+            // Demam, panas, suhu tinggi
+            if (m.includes('demam') || m.includes('panas') || m.includes('suhu') || m.includes('dingin')) {
+                const tips = [
+                    '🌡️ Demam bisa tanda infeksi ringan. Minum air hangat, kompres dengan air biasa, dan istirahat. Bila > 39°C 3 hari, ke dokter.',
+                    'Suhu tinggi? Kurangi pakaian, minum cairan banyak, hindari AC langsung, dan catat suhu setiap 2 jam.',
+                    'Demam sering terjadi saat tubuh melawan infeksi. Paracetamol/ibuprofen boleh, tapi jangan lupa minum air dan istirahat.',
+                    'Suhumu berapa? Kalau > 38°C + sakit kepala + badan pegal, kemungkinan flu/demam berdarah—pantau terus.'
+                ];
+                return chooseRandom(tips);
+            }
+
+            // Batuk, pilek, pernapasan
+            if (m.includes('batuk') || m.includes('pilek') || m.includes('sesak') || m.includes('napas') || m.includes('saluran pernapasan')) {
+                const resp = [
+                    '🫁 Batuk bisa sebab alergi atau infeksi. Minum air kehangatan, gunakan madu, dan hindari debu.',
+                    'Pilek + batuk? Istirahat cukup, garam fisiologis untuk hidung, minum teh hangat, dan hindari polusi.',
+                    'Sesak napas itu serius—segera ke IGD jika berlanjut. Sementara itu: duduk tegak, napas dalam pelan-pelan.',
+                    'Rasakan sesak? Cek riwayat asma/alergi Anda. Hindari pemicu, pakai inhaler kalau ada, dan konsultasi dokter.'
+                ];
+                return chooseRandom(resp);
+            }
+
+            // Mual, muntah, perut
+            if (m.includes('mual') || m.includes('muntah') || m.includes('perut') || m.includes('diare') || m.includes('pencernaan')) {
+                const belly = [
+                    '🤢 Mual + perut sakit bisa sebab makanan atau stres. Istirahat, hindari makanan berat, minum air lemon hangat.',
+                    'Muntah terus? Minum sedikit-sedikit tapi sering (ORS/air gula), hindari makanan berat sampai pulih.',
+                    'Diare lebih dari 3 hari? Mulai dehidrasi serius—perlu ke klinik. Sementara: istirahat, ORS, hindari susu.',
+                    'Perut kembung + nyeri? Coba: minum air hangat, hindari makanan pedas/bergas, dan relaksasi perut.'
+                ];
+                return chooseRandom(belly);
+            }
+
+            // Sakit kepala, migrain
+            if (m.includes('kepala') || m.includes('migrain') || m.includes('pusing')) {
+                const head = [
+                    '🤕 Sakit kepala + pusing? Istirahat di ruang gelap, kompres dahi, minum air, hindari bising.',
+                    'Migrain sering berulang—catat pemicu (makanan, stres, cahaya), dan hindari. Konsultasi dokter untuk obat rutin.',
+                    'Pusing bisa dari dehidrasi, kelelahan, atau tekanan. Cobalah: tidur cukup, minum banyak, dan relaksasi.',
+                    'Kepala terasa berat + sakit > 1 minggu? Sebaiknya cek ke dokter—bisa tekanan darah atau infeksi lainnya.'
+                ];
+                return chooseRandom(head);
+            }
+
+            // Nyeri umum, aches, lelah
+            if (m.includes('nyeri') || m.includes('sakit') || m.includes('lelah') || m.includes('capek') || m.includes('kelelahan')) {
+                const pain = [
+                    '💪 Nyeri otot bisa dari olahraga atau postur buruk. Kompres hangat, pijat lembut, dan istirahat.',
+                    'Lelah terus menerus? Cek pola tidur, nutrisi, dan stres. Mungkin perlu suplemen atau konsultasi kesehatan.',
+                    'Rasa sakit di mana? Lokasi spesifik membantu diagnosis. Catat: onset, durasi, intensitas (1-10).',
+                    'Capek terus? Istirahat lebih lama, rajin olahraga ringan, dan makan bergizi. Kalau 2 minggu still bad, ke dokter.'
+                ];
+                return chooseRandom(pain);
+            }
+
+            // Stress, anxiety, mental health
+            if (m.includes('stress') || m.includes('cemas') || m.includes('khawatir') || m.includes('mental') || m.includes('depresi')) {
+                const mental = [
+                    '🧠 Stress normal, tapi kalau terus bisa berdampak. Coba: meditasi, olahraga ringan, tidur cukup.',
+                    'Cemas berlebih? Teknik pernapasan (4-7-8), yoga, atau konsultasi psikolog bisa membantu.',
+                    'Merasa tertekan lama? Jangan ragu cari bantuan profesional—kesehatan mental sama pentingnya dengan fisik.',
+                    'Pikiran berantakan? Tulis jurnal apa yang mencemaskan, prioritaskan, dan mulai dari yang ringan dulu.'
+                ];
+                return chooseRandom(mental);
+            }
+
+            // Pertanyaan apa yang harus dilakukan
+            if (m.includes('apa') && (m.includes('lakukan') || m.includes('saran') || m.includes('tindakan') || m.includes('cara') || m.includes('treatment'))) {
+                const actions = [
+                    '📌 Langkah pertama: istirahat cukup, minum air, pantau suhu 3x sehari. Jika tak membaik 3 hari → ke dokter.',
+                    'Pertama: jangan panik! Catat gejala detail + kapan mulai. Istirahat, nutrisi baik, hindari pemicu.',
+                    'Saran: segera ke layanan health kalau gejala berat (sesak, nyeri dada, demam > 39°C > 2 hari).',
+                    'Mulai dari: obat ringan (parasetamol/ibu 500mg), istirahat, minum banyak. Kalau makin parah → IGD.'
+                ];
+                return chooseRandom(actions);
+            }
+
+            // Obat, vitamin, suplemen
+            if (m.includes('obat') || m.includes('vitamin') || m.includes('suplemen') || m.includes('minum obat')) {
+                const med = [
+                    '💊 Obat apa? Perlu tahu nama, dosis, frekuensi. Jangan campur tanpa arahan dokter.',
+                    'Vitamin penting tapi jangan berlebih. Konsumsi sesuai kebutuhan (konsultasi dokter) + makan bergizi.',
+                    'Suplemen tidak mengganti obat resep. Jika sakit serius, tetap perlu obat dari dokter + suplemen pendamping.',
+                    'Minum obat jika ada keluhan berat atau per resep dokter. Hindari obat sembarangan, sering ada efek samping.'
+                ];
+                return chooseRandom(med);
+            }
+
+            // Olahraga, aktivitas
+            if (m.includes('olahraga') || m.includes('sehat') || m.includes('gaya hidup') || m.includes('aktivitas')) {
+                const life = [
+                    '🏃 Olahraga ringan 30 min + makan sehat + tidur 7-8 jam = kunci kesehatan optimal.',
+                    'Sehat dimulai dari kebiasaan: jalan pagi, makan buah, kurangi gula, minum air cukup, tidur teratur.',
+                    'Aktivitas fisik bantu serotonin naik, stress turun, dan imun meningkat. Mulai dari yang ringan, konsisten.',
+                    'Gaya hidup berubah perlu waktu ~3 minggu untuk kebiasaan terbentuk. Sabar, konsisten, dan jangan perfeksionis.'
+                ];
+                return chooseRandom(life);
+            }
+
+            // Fallback: varied, warmer, and more engaging
+            const fallbacks = [
+                '👂 Saya dengarkan. Ceritakan lebih detail tentang gejala atau kekhawatiran Anda?',
+                'Menarik pertanyaanmu! Bisa jelaskan lebih lanjut atau ada data kesehatan spesifik yang perlu kita lihat?',
+                '💭 Hm, coba jelaskan kapan dimulai, intensitasnya berapa, dan ada gejala lain nggak?',
+                'Oke, saya catat. Untuk respons lebih akurat, ceritakan: gejala apa, sejak kapan, intensitas.',
+                '🤔 Pertanyaan bagus! Kalau bisa tunjukkan data Anda (riwayat, monitoring) untuk rekomendasi lebih personal.',
+                'Saya akan bantu! Tapi perlu info lebih—bisa cerita keluhan detail sekarang?',
+                'Ada yg ingin Anda ketahui tentang kesehatan? Tanya saja, saya berusaha bantu sebaik mungkin!'
+            ];
+            return chooseRandom(fallbacks);
+        }
+
+        // ========== Proxy Server Helpers ==========
+        async function checkProxyStatus() {
+            try {
+                const resp = await fetch('http://localhost:3000/health');
+                if (resp.ok) {
+                    const label = document.getElementById('proxyLabel');
+                    label.textContent = '✅ connected';
+                    label.style.color = '#48bb78';
+                    showNotification('✅ Proxy server connected!', 'success');
+                } else {
+                    throw new Error('Health check failed');
+                }
+            } catch (err) {
+                const label = document.getElementById('proxyLabel');
+                label.textContent = '❌ offline';
+                label.style.color = '#f56565';
+                showNotification('⚠️ Proxy server tidak aktif - gunakan respon lokal', 'error');
+            }
+        }
+
 
         function openCamera() {
             showNotification('📷 Membuka kamera...', 'info');
@@ -1093,6 +1352,9 @@
             const monitoring = JSON.parse(localStorage.getItem('monitoring') || '{}');
             if (monitoring.berat) document.getElementById('berat').value = monitoring.berat;
             if (monitoring.tinggi) document.getElementById('tinggi').value = monitoring.tinggi;
+
+            // Check proxy status on load
+            checkProxyStatus();
         });
     </script>
 </body>

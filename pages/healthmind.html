@@ -1,536 +1,277 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HealthMind - MAINTAIN HEALTH</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthMind - Maintain Health</title>
 
-        body {
-            background: #f5f5f5;
-            min-height: 100vh;
-        }
+<style>
+body{
+font-family: system-ui;
+margin:0;
+background:#f5f5f5;
+}
 
-        /* HEADER */
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 24px;
-            text-align: center;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
+header{
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;
+padding:20px;
+text-align:center;
+}
 
-        .dashboard-header h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
+.container{
+max-width:800px;
+margin:auto;
+padding:20px;
+}
 
-        .dashboard-header p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
+.card{
+background:white;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+}
 
-        .back-button {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
+.chat{
+height:400px;
+overflow-y:auto;
+border:1px solid #ddd;
+border-radius:15px;
+padding:10px;
+background:#fafafa;
+}
 
-        /* CONTENT */
-        .content {
-            padding: 16px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+.message{
+margin:10px 0;
+display:flex;
+}
 
-        /* CARD */
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+.user{
+justify-content:flex-end;
+}
 
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 12px;
-        }
+.bubble{
+padding:10px 15px;
+border-radius:15px;
+max-width:70%;
+}
 
-        .card-header h2 {
-            color: #333;
-            font-size: 1.5rem;
-        }
+.user .bubble{
+background:#667eea;
+color:white;
+}
 
-        .card-header span {
-            font-size: 2rem;
-        }
+.ai .bubble{
+background:#eee;
+}
 
-        /* CHAT AREA */
-        .chat-container {
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-        }
+.input-area{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            background: #f9f9f9;
-            border-radius: 16px;
-            margin-bottom: 16px;
-            border: 2px solid #f0f0f0;
-        }
+input{
+flex:1;
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+}
 
-        .message {
-            display: flex;
-            margin-bottom: 16px;
-        }
+button{
+padding:10px 15px;
+border:none;
+border-radius:10px;
+background:#667eea;
+color:white;
+cursor:pointer;
+}
 
-        .message.user {
-            justify-content: flex-end;
-        }
+.media{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
 
-        .message.ai {
-            justify-content: flex-start;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .user .message-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 20px 20px 4px 20px;
-        }
-
-        .ai .message-content {
-            background: #f0f0f0;
-            color: #333;
-            border-radius: 20px 20px 20px 4px;
-        }
-
-        .message-time {
-            font-size: 0.7rem;
-            color: #999;
-            margin-top: 4px;
-            text-align: right;
-        }
-
-        /* INPUT AREA */
-        .input-area {
-            background: white;
-            border-radius: 30px;
-            padding: 8px;
-            display: flex;
-            gap: 8px;
-            border: 2px solid #e0e0e0;
-        }
-
-        .input-area input {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            font-size: 1rem;
-            background: transparent;
-        }
-
-        .input-area input:focus {
-            outline: none;
-        }
-
-        .input-area button {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .input-area button:hover {
-            transform: scale(1.1);
-        }
-
-        /* MEDIA BUTTONS */
-        .media-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 16px;
-        }
-
-        .media-btn {
-            padding: 12px 24px;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
-            background: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .media-btn:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        /* SUGGESTIONS */
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .suggestion-chip {
-            padding: 8px 16px;
-            background: #f0f0f0;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .suggestion-chip:hover {
-            background: #e0e0e0;
-        }
-
-        /* NOTIFICATION */
-        .custom-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10000;
-            animation: slideIn 0.3s;
-            max-width: 350px;
-        }
-
-        .notification-success {
-            border-left: 4px solid #48bb78;
-        }
-
-        .notification-error {
-            border-left: 4px solid #f56565;
-        }
-
-        .notification-info {
-            border-left: 4px solid #4299e1;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    </style>
+.history p{
+border-bottom:1px solid #eee;
+padding:5px;
+cursor:pointer;
+}
+</style>
 </head>
+
 <body>
-    <div class="dashboard-header">
-        <button class="back-button" onclick="goBack()">←</button>
-        <h1>HEALTHMIND</h1>
-        <p>Asisten Kesehatan Pintar</p>
-    </div>
 
-    <div class="content">
-        <div class="card">
-            <div class="card-header">
-                <span>🤖</span>
-                <h2>AI Health Assistant</h2>
-            </div>
+<header>
+<h1>HealthMind Assistant</h1>
+<p>Asisten kesehatan pintar</p>
+</header>
 
-            <div class="chat-container">
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message ai">
-                        <div class="message-content">
-                            Halo! Saya HealthMind Assistant. Ada yang bisa saya bantu tentang kesehatan Anda?
-                            <div class="message-time">Sekarang</div>
-                        </div>
-                    </div>
-                </div>
+<div class="container">
 
-                <div class="input-area">
-                    <input type="text" id="messageInput" placeholder="Tanyakan sesuatu..." onkeypress="handleKeyPress(event)">
-                    <button onclick="sendMessage()">📤</button>
-                </div>
+<div class="card">
+<div id="chat" class="chat"></div>
 
-                <div class="suggestions">
-                    <span class="suggestion-chip" onclick="useSuggestion('Apa itu IMT?')">Apa itu IMT?</span>
-                    <span class="suggestion-chip" onclick="useSuggestion('Cara menurunkan demam')">Cara menurunkan demam</span>
-                    <span class="suggestion-chip" onclick="useSuggestion('Makanan untuk diabetes')">Makanan untuk diabetes</span>
-                    <span class="suggestion-chip" onclick="useSuggestion('Gejala COVID-19')">Gejala COVID-19</span>
-                </div>
+<div class="input-area">
+<input id="input" placeholder="Tanyakan sesuatu...">
+<button onclick="send()">Kirim</button>
+</div>
 
-                <div class="media-buttons">
-                    <button class="media-btn" onclick="openCamera()">
-                        <span>📷</span> Kamera
-                    </button>
-                    <button class="media-btn" onclick="openGallery()">
-                        <span>🖼️</span> Galeri
-                    </button>
-                    <button class="media-btn" onclick="startVoice()">
-                        <span>🎤</span> Mic
-                    </button>
-                </div>
-            </div>
-        </div>
+<div class="media">
+<button onclick="openCamera()">📷 Kamera</button>
+<button onclick="openGallery()">🖼 Galeri</button>
+<button onclick="startMic()">🎤 Mic</button>
+</div>
+</div>
 
-        <!-- RIWAYAT PENCARIAN -->
-        <div class="card">
-            <div class="card-header">
-                <span>📜</span>
-                <h2>Riwayat Pencarian</h2>
-            </div>
-            <div id="searchHistory">
-                <!-- Akan diisi JavaScript -->
-            </div>
-        </div>
-    </div>
+<div class="card">
+<h3>Riwayat Pencarian</h3>
+<div id="history" class="history"></div>
+</div>
 
-    <script>
-        // ========== NOTIFICATION ==========
-        function showNotification(message, type = 'success') {
-            const notif = document.createElement('div');
-            notif.className = `custom-notification notification-${type}`;
-            notif.innerHTML = `
-                <span class="notification-icon">${getIcon(type)}</span>
-                <span class="notification-message">${message}</span>
-                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
-            `;
-            document.body.appendChild(notif);
-            
-            setTimeout(() => notif.remove(), 3000);
-        }
+</div>
 
-        function getIcon(type) {
-            switch(type) {
-                case 'success': return '✅';
-                case 'error': return '❌';
-                case 'info': return 'ℹ️';
-                default: return '✅';
-            }
-        }
+<script>
 
-        // ========== NAVIGATION ==========
-        function goBack() {
-            window.location.href = 'dashboard.html';
-        }
+function send(){
+let input=document.getElementById("input");
+let text=input.value.trim();
+if(!text) return;
 
-        // ========== CHAT ==========
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        }
+addMessage(text,"user");
+saveHistory(text);
 
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message) {
-                showNotification('Masukkan pesan terlebih dahulu', 'error');
-                return;
-            }
-            
-            // Tampilkan pesan user
-            addMessage(message, 'user');
-            
-            // Simpan ke riwayat
-            saveSearchHistory(message);
-            
-            // Kosongkan input
-            input.value = '';
-            
-            // Simulasi AI merespon
-            setTimeout(() => {
-                const response = getAIResponse(message);
-                addMessage(response, 'ai');
-            }, 1000);
-        }
+input.value="";
 
-        function addMessage(text, sender) {
-            const messagesDiv = document.getElementById('chatMessages');
-            const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `
-                <div class="message-content">
-                    ${text}
-                    <div class="message-time">${time}</div>
-                </div>
-            `;
-            
-            messagesDiv.appendChild(messageDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
+setTimeout(()=>{
+addMessage(getAI(text),"ai");
+},700);
+}
 
-        function getAIResponse(message) {
-            const responses = {
-                'apa itu imt': 'IMT (Indeks Massa Tubuh) adalah ukuran yang digunakan untuk menilai status gizi seseorang berdasarkan berat badan dan tinggi badan. Rumusnya: berat badan (kg) / (tinggi badan (m) x tinggi badan (m)).',
-                'cara menurunkan demam': 'Untuk menurunkan demam: 1) Komres air hangat, 2) Minum air putih yang banyak, 3) Istirahat cukup, 4) Konsumsi obat penurun panas jika perlu, 5) Konsultasi ke dokter jika demam tinggi.',
-                'makanan untuk diabetes': 'Makanan yang baik untuk diabetes: 1) Sayuran hijau, 2) Ikan, 3) Kacang-kacangan, 4) Buah dengan indeks glikemik rendah, 5) Hindari makanan manis dan tinggi karbohidrat.',
-                'gejala covid-19': 'Gejala umum COVID-19: 1) Demam, 2) Batuk kering, 3) Kelelahan, 4) Kehilangan indra perasa/penciuman, 5) Sesak nafas. Segera periksakan ke dokter jika mengalami gejala.',
-            };
-            
-            // Cari response yang cocok
-            const lowerMessage = message.toLowerCase();
-            for (let key in responses) {
-                if (lowerMessage.includes(key)) {
-                    return responses[key];
-                }
-            }
-            
-            // Response default
-            const defaultResponses = [
-                'Terima kasih atas pertanyaannya. Saya sarankan untuk berkonsultasi dengan dokter untuk informasi lebih lanjut.',
-                'Berdasarkan informasi yang Anda berikan, sebaiknya istirahat yang cukup dan minum air putih.',
-                'Saya mencatat pertanyaan Anda. Untuk kasus seperti ini, pemeriksaan langsung ke dokter lebih disarankan.',
-                'Maaf, saya belum memiliki informasi spesifik tentang itu. Silakan konsultasi dengan tenaga kesehatan.',
-                'Jangan lupa untuk selalu menjaga pola hidup sehat dan olahraga teratur!'
-            ];
-            
-            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-        }
+function addMessage(text,type){
+let chat=document.getElementById("chat");
 
-        function useSuggestion(text) {
-            document.getElementById('messageInput').value = text;
-            sendMessage();
-        }
+let div=document.createElement("div");
+div.className="message "+type;
 
-        // ========== SEARCH HISTORY ==========
-        function saveSearchHistory(query) {
-            let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-            history.unshift({
-                query: query,
-                time: new Date().toISOString()
-            });
-            
-            // Batasi 10 riwayat terakhir
-            if (history.length > 10) {
-                history = history.slice(0, 10);
-            }
-            
-            localStorage.setItem('searchHistory', JSON.stringify(history));
-            displaySearchHistory();
-        }
+div.innerHTML=`<div class="bubble">${text}</div>`;
+chat.appendChild(div);
 
-        function displaySearchHistory() {
-            const historyDiv = document.getElementById('searchHistory');
-            const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-            
-            if (history.length === 0) {
-                historyDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Belum ada riwayat pencarian</p>';
-                return;
-            }
-            
-            let html = '';
-            history.forEach(item => {
-                const date = new Date(item.time).toLocaleDateString('id-ID');
-                html += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0; cursor: pointer;" onclick="useSuggestion('${item.query}')">
-                        <span>🔍 ${item.query}</span>
-                        <span style="color: #999; font-size: 0.8rem;">${date}</span>
-                    </div>
-                `;
-            });
-            
-            historyDiv.innerHTML = html;
-        }
+chat.scrollTop=chat.scrollHeight;
+}
 
-        // ========== MEDIA FUNCTIONS ==========
-        function openCamera() {
-            showNotification('📷 Membuka kamera...', 'info');
-            
-            // Simulasi kamera
-            setTimeout(() => {
-                addMessage('📷 [Foto dari kamera]', 'user');
-                setTimeout(() => {
-                    addMessage('Saya melihat gambar tersebut. Apakah ini resep dokter?', 'ai');
-                }, 1000);
-            }, 2000);
-        }
+function getAI(text){
+text=text.toLowerCase();
 
-        function openGallery() {
-            showNotification('🖼️ Membuka galeri...', 'info');
-            
-            // Simulasi galeri
-            setTimeout(() => {
-                addMessage('🖼️ [Foto dari galeri]', 'user');
-                setTimeout(() => {
-                    addMessage('Terima kasih sudah mengirimkan gambar. Ada yang bisa saya bantu?', 'ai');
-                }, 1000);
-            }, 2000);
-        }
+if(text.includes("imt"))
+return "IMT adalah Indeks Massa Tubuh untuk mengetahui berat badan ideal.";
 
-        function startVoice() {
-            showNotification('🎤 Mendengarkan...', 'info');
-            
-            // Simulasi voice input
-            setTimeout(() => {
-                const dummyVoiceMessages = [
-                    'Saya merasa pusing',
-                    'Cara mengatasi demam',
-                    'Makanan sehat untuk diet'
-                ];
-                const message = dummyVoiceMessages[Math.floor(Math.random() * dummyVoiceMessages.length)];
-                addMessage(`🎤 ${message}`, 'user');
-                
-                setTimeout(() => {
-                    const response = getAIResponse(message);
-                    addMessage(response, 'ai');
-                }, 1000);
-            }, 3000);
-        }
+if(text.includes("demam"))
+return "Cara menurunkan demam: istirahat, minum air putih, dan kompres hangat.";
 
-        // ========== INIT ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            displaySearchHistory();
-        });
-    </script>
+if(text.includes("batuk"))
+return "Jika batuk: minum air hangat, istirahat, dan hindari udara dingin.";
+
+return "Terima kasih atas pertanyaannya. Silakan konsultasi dokter jika perlu.";
+}
+
+////////////////////////////////////
+KAMERA
+////////////////////////////////////
+async function openCamera(){
+try{
+const stream=await navigator.mediaDevices.getUserMedia({video:true});
+addMessage("📷 Kamera berhasil dibuka","ai");
+
+setTimeout(()=>{
+stream.getTracks().forEach(track=>track.stop());
+addMessage("Foto berhasil diambil","ai");
+},3000);
+
+}catch{
+addMessage("Kamera tidak diizinkan browser","ai");
+}
+}
+
+////////////////////////////////////
+GALERI
+////////////////////////////////////
+function openGallery(){
+let input=document.createElement("input");
+input.type="file";
+input.accept="image/*";
+
+input.onchange=e=>{
+let file=e.target.files[0];
+if(file){
+addMessage("🖼 Gambar dipilih: "+file.name,"user");
+}
+};
+
+input.click();
+}
+
+////////////////////////////////////
+MIC
+////////////////////////////////////
+let recorder;
+let chunks=[];
+
+async function startMic(){
+try{
+const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+recorder=new MediaRecorder(stream);
+
+recorder.ondataavailable=e=>{
+chunks.push(e.data);
+};
+
+recorder.onstop=()=>{
+addMessage("🎤 Rekaman suara berhasil","user");
+};
+
+recorder.start();
+addMessage("🎤 Rekaman dimulai...","ai");
+
+setTimeout(()=>{
+recorder.stop();
+},3000);
+
+}catch{
+addMessage("Mic tidak diizinkan browser","ai");
+}
+}
+
+////////////////////////////////////
+HISTORY
+////////////////////////////////////
+function saveHistory(text){
+let data=JSON.parse(localStorage.getItem("history")||"[]");
+data.unshift(text);
+localStorage.setItem("history",JSON.stringify(data));
+showHistory();
+}
+
+function showHistory(){
+let data=JSON.parse(localStorage.getItem("history")||"[]");
+let box=document.getElementById("history");
+
+box.innerHTML="";
+
+data.slice(0,10).forEach(item=>{
+let p=document.createElement("p");
+p.textContent="🔎 "+item;
+p.onclick=()=>{
+document.getElementById("input").value=item;
+};
+box.appendChild(p);
+});
+}
+
+showHistory();
+
+</script>
+
 </body>
 </html>

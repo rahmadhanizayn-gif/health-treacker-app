@@ -166,25 +166,6 @@
             background: #e0e0e0;
         }
 
-        .btn-google {
-            background: white;
-            color: #333;
-            border: 2px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .btn-google:hover {
-            border-color: #667eea;
-        }
-
-        .btn-google img {
-            width: 24px;
-            height: 24px;
-        }
-
         /* LINKS */
         .forgot-password {
             text-align: center;
@@ -214,6 +195,26 @@
             color: #667eea;
             text-decoration: none;
             font-weight: 600;
+        }
+
+        /* RESET BUTTON */
+        .reset-data-btn {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .reset-data-btn button {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .reset-data-btn button:hover {
+            color: #f56565;
         }
 
         /* OTP SCREEN */
@@ -355,10 +356,6 @@
             <button class="login-method-btn" onclick="showPhoneLogin()">
                 <span>📱</span> Masuk dengan Nomor Telepon
             </button>
-            <button class="login-method-btn btn-google" onclick="showNotification('Google Login akan segera tersedia', 'info')">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath d='M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z' fill='%234285F4'/%3E%3C/svg%3E" alt="Google">
-                Masuk dengan Google
-            </button>
         </div>
 
         <!-- LOGIN FORM (EMAIL) - HIDDEN AWAL -->
@@ -405,6 +402,38 @@
             <button class="btn btn-secondary" onclick="showLoginMethods()">Kembali</button>
         </div>
 
+        <!-- REGISTER FORM - HIDDEN AWAL -->
+        <div id="register-form" class="login-form hidden">
+            <div class="form-group">
+                <label>👤 Nama Lengkap</label>
+                <input type="text" id="reg-name" placeholder="Masukkan nama lengkap">
+            </div>
+            <div class="form-group">
+                <label>📧 Email</label>
+                <input type="email" id="reg-email" placeholder="contoh@email.com">
+            </div>
+            <div class="form-group">
+                <label>📱 Nomor Telepon</label>
+                <input type="tel" id="reg-phone" placeholder="081234567890">
+            </div>
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <div class="password-input">
+                    <input type="password" id="reg-password" placeholder="••••••••">
+                    <span class="toggle-password" onclick="togglePassword('reg-password')">👁️</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>🔒 Konfirmasi Password</label>
+                <div class="password-input">
+                    <input type="password" id="reg-confirm-password" placeholder="••••••••">
+                    <span class="toggle-password" onclick="togglePassword('reg-confirm-password')">👁️</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="processRegister()">Daftar</button>
+            <button class="btn btn-secondary" onclick="showLoginMethods()">Kembali</button>
+        </div>
+
         <!-- OTP SCREEN - HIDDEN AWAL -->
         <div id="otp-screen" class="otp-screen hidden">
             <div class="otp-header">
@@ -439,196 +468,370 @@
 
         <!-- REGISTER LINK -->
         <div class="register-link">
-            Belum punya akun? <a href="#" onclick="showNotification('Fitur registrasi akan segera dibuka', 'info')">Daftar</a>
+            Belum punya akun? <a href="#" onclick="showRegister()">Daftar</a>
+        </div>
+
+        <!-- RESET DATA -->
+        <div class="reset-data-btn">
+            <button onclick="resetAllData()">🔄 Reset Data</button>
         </div>
     </div>
 
-    <script>
-        // ========== NOTIFICATION SYSTEM ==========
-        function showNotification(message, type = 'success') {
-            const notif = document.createElement('div');
-            notif.className = `custom-notification notification-${type}`;
-            notif.innerHTML = `
-                <span class="notification-icon">${getIcon(type)}</span>
-                <span class="notification-message">${message}</span>
-                <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
-            `;
-            document.body.appendChild(notif);
+   <script>
+    // ========== NOTIFICATION SYSTEM ==========
+    function showNotification(message, type = 'success') {
+        const notif = document.createElement('div');
+        notif.className = `custom-notification notification-${type}`;
+        notif.innerHTML = `
+            <span class="notification-icon">${getIcon(type)}</span>
+            <span class="notification-message">${message}</span>
+            <span class="notification-close" onclick="this.parentElement.remove()">✕</span>
+        `;
+        document.body.appendChild(notif);
+
+        setTimeout(() => {
+            if (notif.parentElement) notif.remove();
+        }, 3000);
+    }
+
+    function getIcon(type) {
+        switch(type) {
+            case 'success': return '✅';
+            case 'error': return '❌';
+            case 'info': return 'ℹ️';
+            default: return '✅';
+        }
+    }
+
+    // ========== NAVIGATION ==========
+    function showLoginMethods() {
+        hideAll();
+        document.getElementById('login-methods').classList.remove('hidden');
+    }
+
+    function showEmailLogin() {
+        hideAll();
+        document.getElementById('email-login').classList.remove('hidden');
+    }
+
+    function showPhoneLogin() {
+        hideAll();
+        document.getElementById('phone-login').classList.remove('hidden');
+    }
+
+    function showForgotPassword() {
+        hideAll();
+        document.getElementById('forgot-password').classList.remove('hidden');
+    }
+
+    function backToForgot() {
+        hideAll();
+        document.getElementById('forgot-password').classList.remove('hidden');
+    }
+
+    function showRegister() {
+        hideAll();
+        document.getElementById('register-form').classList.remove('hidden');
+    }
+
+    function hideAll() {
+        document.getElementById('login-methods').classList.add('hidden');
+        document.getElementById('email-login').classList.add('hidden');
+        document.getElementById('phone-login').classList.add('hidden');
+        document.getElementById('forgot-password').classList.add('hidden');
+        document.getElementById('otp-screen').classList.add('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+    }
+
+    // ========== PASSWORD ==========
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // ========== LOGIN PROCESS ==========
+    function processLogin() {
+        let email = (document.getElementById('email')?.value || '').trim();
+        let phone = (document.getElementById('phone')?.value || '').replace(/[^0-9]/g, '').trim();
+        const password = (document.getElementById('password')?.value || document.getElementById('phone-password')?.value || '').trim();
+
+        if (!email && !phone) {
+            showNotification('Masukkan email atau nomor telepon', 'error');
+            return;
+        }
+
+        if (!password) {
+            showNotification('Masukkan password', 'error');
+            return;
+        }
+
+        // Ambil semua user dari localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        // Cari user berdasarkan email atau nomor telepon (normalisasi untuk perbandingan)
+        const foundUser = users.find(user => {
+            const uEmail = user.email ? user.email.toLowerCase().trim() : '';
+            const uPhone = user.phone ? user.phone.replace(/[^0-9]/g, '').trim() : '';
+
+            if (email && uEmail && uEmail === email.toLowerCase()) return true;
+            if (phone && uPhone && uPhone === phone) return true;
+            return false;
+        });
+
+        if (!foundUser) {
+            showNotification('Email atau nomor telepon tidak terdaftar. Silakan daftar terlebih dahulu', 'error');
+            return;
+        }
+
+        // Validasi password
+        if ((foundUser.password || '').trim() !== password) {
+            showNotification('Password tidak sesuai', 'error');
+            return;
+        }
+
+        // Simpan user yang login
+        localStorage.setItem('currentUser', JSON.stringify(foundUser));
+
+        showNotification('Login berhasil!', 'success');
+
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1200);
+    }
+
+    // ========== OTP ==========
+    function sendOTP() {
+        let input = (document.getElementById('forgot-input').value || '').trim();
+        if (!input) {
+            showNotification('Masukkan email atau nomor telepon', 'error');
+            return;
+        }
+
+        // normalisasi input
+        const inputIsEmail = /@/.test(input);
+        const normalizedInputEmail = inputIsEmail ? input.toLowerCase() : '';
+        const normalizedInputPhone = inputIsEmail ? '' : input.replace(/[^0-9]/g, '');
+
+        // Ambil semua user dari localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Cari user berdasarkan email atau nomor telepon (normalisasi)
+        const foundUser = users.find(user => {
+            const uEmail = user.email ? user.email.toLowerCase().trim() : '';
+            const uPhone = user.phone ? user.phone.replace(/[^0-9]/g, '').trim() : '';
+
+            if (normalizedInputEmail && uEmail === normalizedInputEmail) return true;
+            if (normalizedInputPhone && uPhone === normalizedInputPhone) return true;
+            return false;
+        });
+        
+        if (!foundUser) {
+            showNotification('Email atau nomor telepon tidak terdaftar', 'error');
+            return;
+        }
+
+        // Generate OTP random 6 digit
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Simpan OTP dan contact ke localStorage
+        localStorage.setItem('tempOTP', otp);
+        localStorage.setItem('forgotContact', input);
+        
+        hideAll();
+        document.getElementById('otp-screen').classList.remove('hidden');
+        
+        // Tampilkan OTP di alert
+        alert(`📌 Kode OTP Anda:\n\n${otp}\n\nKode berlaku 60 detik`);
+        showNotification(`✅ Kode OTP telah dikirim ke ${input}`, 'success');
+        
+        startOTPTimer();
+    }
+
+    function startOTPTimer() {
+        let timeLeft = 60;
+        const timerElement = document.getElementById('timer');
+        
+        const interval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             
-            setTimeout(() => {
-                if (notif.parentElement) {
-                    notif.remove();
-                }
-            }, 3000);
-        }
-
-        function getIcon(type) {
-            switch(type) {
-                case 'success': return '✅';
-                case 'error': return '❌';
-                case 'info': return 'ℹ️';
-                default: return '✅';
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                timerElement.textContent = 'Kode kadaluarsa';
             }
-        }
+        }, 1000);
+    }
 
-        // ========== NAVIGATION ==========
-        function showLoginMethods() {
-            document.getElementById('login-methods').classList.remove('hidden');
-            document.getElementById('email-login').classList.add('hidden');
-            document.getElementById('phone-login').classList.add('hidden');
-            document.getElementById('forgot-password').classList.add('hidden');
-            document.getElementById('otp-screen').classList.add('hidden');
+    function verifyOTP() {
+        // Ambil OTP dari input fields
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+        
+        // Ambil OTP yang benar dari localStorage
+        const correctOTP = localStorage.getItem('tempOTP');
+        
+        if (enteredOTP.length !== 6) {
+            showNotification('Masukkan kode OTP 6 digit', 'error');
+            return;
         }
-
-        function showEmailLogin() {
-            document.getElementById('login-methods').classList.add('hidden');
-            document.getElementById('email-login').classList.remove('hidden');
+        
+        if (enteredOTP !== correctOTP) {
+            showNotification('Kode OTP tidak sesuai', 'error');
+            return;
         }
+        
+        showNotification('✅ OTP berhasil diverifikasi', 'success');
+        
+        // Clear OTP inputs
+        otpInputs.forEach(input => input.value = '');
+        
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1200);
+    }
 
-        function showPhoneLogin() {
-            document.getElementById('login-methods').classList.add('hidden');
-            document.getElementById('phone-login').classList.remove('hidden');
-        }
+    function resendOTP() {
+        showNotification('Kode OTP telah dikirim ulang');
+        startOTPTimer();
+    }
 
-        function showForgotPassword() {
-            document.getElementById('login-methods').classList.add('hidden');
-            document.getElementById('forgot-password').classList.remove('hidden');
-        }
-
-        function backToForgot() {
-            document.getElementById('otp-screen').classList.add('hidden');
-            document.getElementById('forgot-password').classList.remove('hidden');
-        }
-
-        // ========== PASSWORD TOGGLE ==========
-        function togglePassword(id) {
-            const input = document.getElementById(id);
-            const type = input.type === 'password' ? 'text' : 'password';
-            input.type = type;
-        }
-
-        // ========== OTP FUNCTIONS ==========
-        function onlyNumber(event) {
-            const charCode = event.which ? event.which : event.keyCode;
-            if (charCode < 48 || charCode > 57) {
-                event.preventDefault();
-                return false;
-            }
-            return true;
-        }
-
-        function moveToNext(input, index) {
-            if (input.value.length === 1 && index < 5) {
-                document.querySelectorAll('.otp-input')[index + 1].focus();
-            }
-            
-            // Auto verify jika semua terisi
+    function moveToNext(input, index) {
+        if (input.value.length === 1) {
             const inputs = document.querySelectorAll('.otp-input');
-            let isComplete = true;
-            inputs.forEach(i => {
-                if (!i.value) isComplete = false;
-            });
-            
-            if (isComplete) {
-                setTimeout(() => verifyOTP(), 500);
+            if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
             }
         }
+    }
 
-        // Timer OTP
-        let otpTimer;
-        function startTimer(seconds) {
-            const timerDisplay = document.getElementById('timer');
-            let remaining = seconds;
-            
-            otpTimer = setInterval(() => {
-                const minutes = Math.floor(remaining / 60);
-                const secs = remaining % 60;
-                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                
-                if (remaining <= 0) {
-                    clearInterval(otpTimer);
-                    timerDisplay.textContent = 'Kode expired';
-                }
-                remaining--;
-            }, 1000);
+    function onlyNumber(event) {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
+
+    // ========== REGISTER PROCESS ==========
+    function processRegister() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const phone = document.getElementById('reg-phone').value;
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+
+        // Validasi
+        if (!name) {
+            showNotification('Masukkan nama lengkap', 'error');
+            return;
         }
 
-        function sendOTP() {
-            const input = document.getElementById('forgot-input').value;
-            if (!input) {
-                showNotification('Masukkan email atau nomor telepon', 'error');
-                return;
-            }
-            
-            // Validasi email/phone sederhana
-            if (!input.includes('@') && !/^\d+$/.test(input)) {
-                showNotification('Format email atau nomor telepon tidak valid', 'error');
-                return;
-            }
-            
-            showNotification(`Kode OTP telah dikirim ke ${input}`);
-            
-            document.getElementById('forgot-password').classList.add('hidden');
-            document.getElementById('otp-screen').classList.remove('hidden');
-            
-            startTimer(60);
+        if (!email) {
+            showNotification('Masukkan email', 'error');
+            return;
         }
 
-        function resendOTP() {
-            clearInterval(otpTimer);
-            showNotification('Kode OTP telah dikirim ulang');
-            startTimer(60);
+        if (!phone) {
+            showNotification('Masukkan nomor telepon', 'error');
+            return;
         }
 
-        function verifyOTP() {
-            const inputs = document.querySelectorAll('.otp-input');
-            let otp = '';
-            inputs.forEach(i => otp += i.value);
-            
-            if (otp.length === 6) {
-                showNotification('✅ Verifikasi berhasil!');
-                clearInterval(otpTimer);
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            } else {
-                showNotification('Kode OTP tidak valid', 'error');
-            }
+        if (!password || password.length < 6) {
+            showNotification('Password minimal 6 karakter', 'error');
+            return;
         }
 
-        // ========== LOGIN PROCESS ==========
-        function processLogin() {
-            // Cek apakah dari email atau phone
-            const email = document.getElementById('email')?.value;
-            const phone = document.getElementById('phone')?.value;
-            const password = document.getElementById('password')?.value || document.getElementById('phone-password')?.value;
-            
-            if (!email && !phone) {
-                showNotification('Masukkan email atau nomor telepon', 'error');
-                return;
-            }
-            
-            if (!password) {
-                showNotification('Masukkan password', 'error');
-                return;
-            }
-            
-            showNotification('✅ Login berhasil!');
-            
+        if (password !== confirmPassword) {
+            showNotification('Password tidak cocok', 'error');
+            return;
+        }
+
+        // Validasi email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showNotification('Format email tidak valid', 'error');
+            return;
+        }
+
+        // Validasi nomor telepon
+        if (!/^\d{10,}$/.test(phone.replace(/[\s\-()]/g, ''))) {
+            showNotification('Nomor telepon tidak valid', 'error');
+            return;
+        }
+
+        // Ambil semua user dari localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        // normalisasi input untuk perbandingan dan penyimpanan
+        const normalizedEmail = email.toLowerCase();
+        const normalizedPhone = phone.replace(/[^0-9]/g, '');
+
+        // Cek apakah email sudah terdaftar
+        const emailExists = users.some(user => 
+            user.email && user.email.toLowerCase().trim() === normalizedEmail.trim()
+        );
+        
+        if (emailExists) {
+            showNotification('Email sudah terdaftar', 'error');
+            return;
+        }
+
+        // Cek apakah nomor telepon sudah terdaftar
+        const phoneExists = users.some(user => 
+            user.phone && user.phone.replace(/[^0-9]/g, '').trim() === normalizedPhone.trim()
+        );
+        
+        if (phoneExists) {
+            showNotification('Nomor telepon sudah terdaftar', 'error');
+            return;
+        }
+
+        // Buat object user baru (simpan email lowercase dan phone hanya digit)
+        const newUser = {
+            name: name,
+            email: normalizedEmail,
+            phone: normalizedPhone,
+            password: password.trim(),
+            registerTime: new Date().toISOString()
+        };
+
+        // Tambahkan user baru ke array
+        users.push(newUser);
+
+        // Simpan array users ke localStorage
+        localStorage.setItem('users', JSON.stringify(users));
+
+        showNotification('✅ Akun berhasil dibuat! Silakan login...', 'success');
+
+        setTimeout(() => {
+            showLoginMethods();
+            // Reset form
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-email').value = '';
+            document.getElementById('reg-phone').value = '';
+            document.getElementById('reg-password').value = '';
+            document.getElementById('reg-confirm-password').value = '';
+        }, 1500);
+    }
+
+    // ========== INIT ==========
+    function resetAllData() {
+        if (confirm('⚠️ Yakin ingin menghapus SEMUA data? Tindakan ini tidak bisa dibatalkan!')) {
+            localStorage.clear();
+            showNotification('✅ Semua data berhasil dihapus!', 'success');
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                location.reload();
             }, 1500);
         }
+    }
 
-        // ========== INIT ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cek apakah sudah login sebelumnya
-            const lastLogin = localStorage.getItem('lastLogin');
-            if (lastLogin) {
-                document.querySelector('.login-header p').textContent = 'Selamat datang kembali!';
-            }
-        });
-    </script>
-</body>
-</html>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            document.querySelector('.login-header p').textContent =
+                'Selamat datang kembali!';
+        }
+    });
+</script>
